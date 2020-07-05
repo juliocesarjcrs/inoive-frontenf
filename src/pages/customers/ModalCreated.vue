@@ -1,0 +1,177 @@
+<template>
+    <div ref="modalCreated" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear   Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ValidationObserver ref="observer">
+                        <div class="container text-left">
+                            <form> 
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <ValidationProvider v-slot="{errors}" rules="required" name="Nombre">
+                                                <label for="exampleFormControlSelect1">Nombre</label>
+                                                <input v-model="form.name" ype="text" class="form-control" placeholder="Nombre del cliente" maxlength="300" />
+                                                <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlSelect1">Tipo Identificacion</label>
+                                            <select v-model="form.typeId" class="form-control">
+                                                <option v-for="(tipo, idx) in optionstype" :key="idx" :value="tipo.id">{{tipo.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlSelect1">N° Identificación</label>
+                                            <ValidationProvider v-slot="{errors}" rules="required" name="N° Identificación">
+                                                <input v-model="form.nit" ype="text" class="form-control" placeholder="N° Identificación" maxlength="15" />
+                                                <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlSelect1">Dirección</label>
+                                            <ValidationProvider v-slot="{errors}" rules="required" name="Dirección">
+                                                <input v-model="form.address" ype="text" class="form-control" placeholder="Dirección" maxlength="120" />
+                                                <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlSelect1">Teléfono</label>
+                                            <ValidationProvider v-slot="{errors}" rules="required" name="Teléfono">
+                                                <input v-model="form.phone" ype="text" class="form-control" placeholder="Teléfono" maxlength="15" />
+                                                <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlSelect1">Email</label>
+                                            <ValidationProvider v-slot="{errors}" rules="required" name="Email">
+                                                <input v-model="form.email" ype="text" class="form-control" placeholder="Email" maxlength="120" />
+                                                <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </ValidationObserver>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        <span @click="save">Save changes </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    data(){
+        return{
+            form:{
+                _id: null,
+                name: null,
+                typeId: 1,
+                nit: null,
+                address: null,
+                phone: null,
+                email: null,
+            },
+            modeEdit: false,
+            optionstype: [
+                {id: 1, name: 'CC'},
+                {id: 2, name: 'NIT'},
+            ],
+     
+        }
+    },
+    methods:{
+        openModal(item){
+            this.clean()
+            if(item){
+                this.modeEdit = true
+                this.form._id = item._id
+                this.form.name = item.name
+                this.form.typeId = item.typeId
+                this.form.nit = item.nit
+                this.form.address = item.address
+                this.form.phone = item.phone
+                this.form.email = item.email          
+            }
+            $(this.$refs.modalCreated).modal('toggle')
+        },
+        async save(){
+            try {
+                const isValid = await this.$refs.observer.validate()
+                if (!isValid){
+                    this.notification('Mensaje', 'Campos necesarios', 'warning')
+                    return false
+                }
+                if(this.modeEdit){
+                    const {data} = await this.$axios.put('customer', this.form).catch(e =>this.HandlingErrors(e))
+
+                }else{
+                    const {data} = await this.$axios.post('customer', this.form).catch(e =>this.HandlingErrors(e))
+
+                }
+                this.notification('Mensaje', 'Producto guardado', 'success')
+                this.$emit('update')
+                $(this.$refs.modalCreated).modal('toggle')
+            } catch (e){
+                console.error('catch',e)
+            }
+            
+        },
+        clean(){
+            this.form={
+                _id: null,
+                name: null,
+                typeId: 1,
+                nit: null,
+                address: null,
+                phone: null,
+                email: null,
+            },
+            this.modeEdit= false
+        },
+        addTag(newTag){
+            const tag = {
+                name: newTag,
+                
+                code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+            }
+            this.optionsCategory.push(tag)
+            //   this.form.push(tag)
+        }
+    }
+}
+</script>
+<style scoped>
+.margin-pdf {
+    width: 632px;
+}
+table {
+    font-size: 11px;
+}
+</style>

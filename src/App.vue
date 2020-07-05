@@ -2,19 +2,21 @@
     <div id="app">
         <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
         <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-        <invoice />
+        <navbar />
+        <!-- <router-view /> -->
+        <!-- <invoice /> -->
     </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
+import navbar from './components/Navbar.vue'
 import invoice from './components/invoice.vue'
 
 export default {
     name: 'App',
     components: {
-    // HelloWorld,
-        invoice
+        navbar,
+        // invoice
     }
 }
 </script>
