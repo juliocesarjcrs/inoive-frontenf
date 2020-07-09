@@ -2,8 +2,8 @@
     <section>
         <div class="row">
             <div class="col-12">
-                <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="addProduc">
-                    Agregar producto<i class="fas fa-plus-square" />
+                <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="addInvoice">
+                    Agregar Factura<i class="fas fa-plus-square" />
                 </span>
             </div>
         </div>
@@ -15,16 +15,16 @@
                             #
                         </th>
                         <th scope="col">
-                            Nombre
+                            Fecha
                         </th>
                         <th scope="col">
-                            Categoria
+                            Cliente
                         </th>
                         <th scope="col">
-                            Subcategoria
+                            Valor total
                         </th>
                         <th scope="col">
-                            Precio
+                            Cant Productos
                         </th>
                         <th scope="col">
                             opciones
@@ -32,19 +32,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(product, idx) in listProducts" :key="idx">
+                    <tr v-for="(invoice, idx) in listProducts" :key="idx">
                         <th scope="row">
-                            {{idx+1}}
+                            {{invoice.code}}
                         </th>
-                        <td>{{product.nameShow}}</td>
-                        <td>{{product.categoria}}</td>
-                        <td>{{product.subcategory}}</td>
-                        <td>{{format_number(product.unitPrice)}}</td>
+                        <td>{{invoice.date}}</td>
+                        <td>{{invoice.customerId.name}}</td>
+                        <td>{{format_number(invoice.subtotal)}}</td>
+                        <td>{{invoice.products.length}}</td>
                         <td>
-                            <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="editProduct(product)">
+                            <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="edit(invoice)">
                                 <i class="fas fa-edit" />
                             </span>
-                            <span class="mr-2" style="font-size: 1em; color: tomato;" @click="deleteProduct(product._id)">
+                            <span class="mr-2" style="font-size: 1em; color: tomato;" @click="deleted(invoice._id)">
                                 <i class="fas fa-window-close" />
                             </span>                           
                         </td>
@@ -52,14 +52,13 @@
                 </tbody>
             </table>
         </div>
-        <ModalCreatedProduct ref="ModalCreatedProduct" @update="listarProducts" />
         <ModalDeletedProduct ref="ModalDeletedProduct" @update="listarProducts" />
     </section>
 </template>
 <script>
+import moment from 'moment'
 export default {
     components:{
-        ModalCreatedProduct : () => import('./ModalCreatedProduct'),
         ModalDeletedProduct : () => import('./ModalDeletedProduct')
     },
     data(){
@@ -71,21 +70,24 @@ export default {
         this.listarProducts()
     },
     methods:{
-        addProduc(){
-            this.$refs.ModalCreatedProduct.openModal()
+        addInvoice(){
+            this.$router.push({name:'invoice.edit'})
         },
         async listarProducts(){
             try {
-                const {data} = await this.$axios.get('product').catch(e =>this.HandlingErrors(e))
-                this.listProducts = data.body                
+                const {data} = await this.$axios.get('invoice').catch(e =>this.HandlingErrors(e))
+                this.listProducts = data.body               
+                this.listProducts.map(e =>{
+                    e.date = moment(e.date).format('MMMM Do YYYY');
+                })               
             } catch (e){
                 console.error(e)
             }
         },
-        editProduct(product){
-            this.$refs.ModalCreatedProduct.openModal(product)
+        edit(product){
+            this.$router.push({name:'invoice.edit', params:{id_factura: product._id}})
         },
-        deleteProduct(id){
+        deleted(id){
             this.$refs.ModalDeletedProduct.openModal(id)
             
         }

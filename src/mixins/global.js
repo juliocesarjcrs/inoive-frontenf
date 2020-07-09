@@ -13,7 +13,10 @@ export default {
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
-                this.notification(`Error ${error.response.status}`,error.response.data.error, 'error')
+                if(error.response.status ===422){
+                    this.notification(`Error ${error.response.status}`,error.response.data.errors, 'warning')
+
+                }
             } else if (error.request){
                 console.log('(2)');
 
@@ -49,6 +52,13 @@ export default {
             }else if(type==='error'){
                 miniToastr.error(message, title)
             }
+        },
+        format_date(){
+            moment().format('ll');
+        },
+        format_number(number){         
+            return  `$ ${new Intl.NumberFormat("de-DE").format(number)}`
         }
+
     }
 }

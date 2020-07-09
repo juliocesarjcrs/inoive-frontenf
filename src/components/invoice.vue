@@ -1,65 +1,71 @@
 <template>
-    <section class="m-4">
-        <div class="row mb-2">
+    <section class="">
+        <div class="row mb-4">
             <div class="col-12 col-sm-12 text-left">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary">
-                        Guardar
+                    <button type="button" class="btn btn-secondary" @click="saveInvoice">
+                        {{texto}}
                     </button>
-                    <button type="button" class="btn btn-secondary">
+                    <button type="button" class="btn btn-secondary" @click="openModalPreviewPdf">
                         Ver PDF
-                    </button>
-                    <button type="button" class="btn btn-secondary">
-                        Right
                     </button>
                 </div>
             </div>
         </div>
-        <div class="">
-            <div class="row">
-                <div class="col-12 col-sm-3">
-                    <img src="../assets/empresa.jpeg" alt="" width="150" />
-                </div>
-                <div class="col-12 col-sm-6">
-                    <h4>Silvia Milena Botero Orozco</h4>
-                    <p>
-                        <strong>NIF:</strong><span>1019.040260-1</span>
-                        <br />
-                        Circinvaalr 36 A No 104-25 Puerto Varas
-                        <br />
-                        313 276 1187<br />
-                        silvia.boteroderecho@gmail.com
-                    </p>
-                </div>
-                <div class="col-12 col-sm-3">
-                    <p>
+        <div class="bg-personalice p-4">
+            <ValidationObserver ref="observer">
+                <div class="row">
+                    <div class="col-12 col-sm-3">
+                        <img src="../assets/Emik.jpeg" alt="" width="250" />
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <h4>Silvia Milena Botero Orozco</h4>
+                        <p>
+                            <strong>NIF:</strong><span>1019.040260-1</span>
+                            <br />
+                            Circinvaalr 36 A No 104-25 Puerto Varas
+                            <br />
+                            313 276 1187<br />
+                            silvia.boteroderecho@gmail.com
+                        </p>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <!-- <p> -->
                         <strong>Factura:</strong>
-                        <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" style="width=170px" />
+                        <ValidationProvider v-slot="{errors}" rules="required" name="N° Factura">
+                            <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" style="width: 180px;" />                      
+                            <span class="text-danger f-10">{{errors[0]}}</span>
+                        </ValidationProvider>
                         <br />
                         <strong>Fecha:</strong>
-                        <input v-model="form.date" type="date" class="form-control" style="width=170px" />
+                        <ValidationProvider v-slot="{errors}" rules="required" name="Fecha">
+                            <input v-model="form.date" type="date" class="form-control" style="width=170px" />                          
+                            <span class="text-danger f-10">{{errors[0]}}</span>
+                        </ValidationProvider>
                         <br />
                         <strong>Saldo deudor</strong><br />
-                        {{form.subtotal}}
-                    </p>
+                        {{format_number(form.subtotal)}}
+                        <!-- </p> -->
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-sm-10 col-md-6 col-lg-3  text-left">
-                    <h5>Cliente</h5>
-                    <select v-model="form.customerId" class="form-control" @change="selectCustomer">
-                        <option v-for="(list, idx) in optionsCustomers" :key="idx" :value="list._id">{{list.name}}</option>
-                    </select>
-                    <p>
-                        {{customer.name}}<br />
-                        <strong>NIF:</strong><span>{{customer.nit}}</span><br />
-                        {{customer.address}}<br />
-                        {{customer.phone}}<br />
-                        {{customer.email}}
-                    </p>
+                <div class="row">
+                    <div class="col-12 col-sm-10 col-md-6 col-lg-3  text-left">
+                        <h5>Cliente</h5>
+                        <ValidationProvider v-slot="{errors}" rules="required" name="Cliente">
+                            <select v-model="form.customerId" class="form-control" @change="selectCustomer">
+                                <option v-for="(list, idx) in optionsCustomers" :key="idx" :value="list._id">{{list.name}}</option>
+                            </select>
+                            <span class="text-danger f-10">{{errors[0]}}</span>
+                        </ValidationProvider>
+                        <p>
+                            {{customer.name}}<br />
+                            <strong>NIF:</strong><span>{{customer.nit}}</span><br />
+                            {{customer.address}}<br />
+                            {{customer.phone}}<br />
+                            {{customer.email}}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <ValidationObserver ref="observer">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-default">
@@ -116,7 +122,7 @@
                                                     </ValidationProvider>
                                                 </td>
                                                 <td class="text-right">
-                                                    {{form.subtotal}}
+                                                    {{format_number(item.total)}}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -128,7 +134,7 @@
                                                     <strong>Subtotal</strong>
                                                 </td>
                                                 <td class="thick-line text-right">
-                                                    {{form.subtotal}}
+                                                    {{format_number(form.subtotal)}}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -152,7 +158,7 @@
                                                     <strong>Total</strong>
                                                 </td>
                                                 <td class="no-line text-right">
-                                                    {{form.subtotal}}
+                                                    {{format_number(form.subtotal)}}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -168,12 +174,14 @@
     </section>
 </template>
 <script>
+import moment from 'moment'
 export default {
     components:{
         ModalPreviewInvoice : () => import('./ModalPreviewInvoice')
     },
     data(){
         return{
+            id_factura: this.$route.params.id_factura,
             form:{
                 code: null,
                 date: null,
@@ -205,25 +213,41 @@ export default {
 
         }
     },
+    computed:{
+        texto(){
+            if(this.id_factura=== undefined || this.id_factura ===null){
+                return 'Guardar'
+            }else{
+                return 'Editar'
+            }
+        }
+    },
     mounted(){
         this.SelectListarProducts()
         this.listarCustomers()
+        this.listInvoice()
     },
     methods:{
         recalculate(){   
             let subtotal = 0         
-            this.products.map(p =>{
+            this.products.map(p =>{             
                 p.total = p.price * p.quantity
                 subtotal = subtotal+ p.total
             })
             this.form.subtotal = subtotal
         },
         addProduc(idx){
+            let hasEmpty = this.products.some(e => e.productId === null)
+            if(hasEmpty){
+                this.notification('Mensaje', 'Producto vacio', 'warning')
+                return false
+            }
             let newProduct = {
-                name:'Caja de guantes de nitrilo color azul por 100 unidades talla S,m Y l',
+                productId: null,
+                description: null,
                 price: 0,
                 quantity: 0,
-                total: 0 
+                total: 0
             }
             let pos = idx +1         
             this.products.splice(pos,0, newProduct)
@@ -232,8 +256,15 @@ export default {
         removeProduc(idx){
             this.products.splice(idx,1)
         },
-        openModal(){
-            this.$refs.modalPreviewInvoice.openModal()
+        openModalPreviewPdf(){
+            let productos = this.form.products.map(e =>{    
+                let producFind = this.opctionsProduct.find(p => p._id===e.productId)
+                if(producFind){
+                    e.nameShow = producFind.nameShow
+                }
+                return e
+            })
+            this.$refs.modalPreviewInvoice.openModal(this.form, this.customer, productos)
         },
         async SelectListarProducts(){
             try {
@@ -256,6 +287,42 @@ export default {
             if(customerFind){
                 this.customer = customerFind 
             }
+        },
+        async saveInvoice(){
+            try {
+                const isValid = await this.$refs.observer.validate()
+                if (!isValid){
+                    this.notification('Mensaje', 'Campos necesarios', 'warning')
+                    return false
+                }
+                let hasEmpty = this.products.some(e => e.productId === null)
+                if(hasEmpty){
+                    this.notification('Mensaje', 'Tiene productos vacios', 'warning')
+                    return false
+                }
+                this.form.products = this.products
+                const {data} = await this.$axios.post('invoice', this.form).catch(e =>this.HandlingErrors(e))
+                this.notification('Mensaje', 'Producto guardado', 'success')
+                
+            } catch (error){
+                console.log('del catch', error);
+            }
+
+        },
+        async listInvoice(){
+            try {
+                if(this.id_factura=== undefined || this.id_factura ===null){
+                    return false
+                }
+                const {data} = await this.$axios.get(`invoice/${this.id_factura}`).catch(e =>this.HandlingErrors(e))
+                this.form = data.body
+                this.form.date = moment(this.form.date).format('YYYY-MM-DD');
+                this.products = data.body.products
+                this. selectCustomer()
+            } catch (e){
+                console.log('del catch', e);
+            }
+
         }
     }
     
@@ -264,5 +331,9 @@ export default {
 <style scoped>
 .margin-pdf{
     width: 632px;;
+}
+.bg-personalice{
+    /* background-color: '#ebece'; */
+        background: rgb(229, 241, 237);
 }
 </style>
