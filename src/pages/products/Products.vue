@@ -1,10 +1,13 @@
 <template>
     <section>
-        <div class="row">
-            <div class="col-12">
-                <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="addProduc">
-                    Agregar producto<i class="fas fa-plus-square" />
-                </span>
+        <div class="row mr-4 mb-3">
+            <div class="col-12 text-right">
+                <button class="btn btn-primary" @click="addProduc">
+                    Agregar Producto
+                    <span class="mr-2 ml-2" style="font-size: 1em;">
+                        <i class="fas fa-plus-square" />
+                    </span>
+                </button>
             </div>
         </div>
         <div class="table-responsive-sm">

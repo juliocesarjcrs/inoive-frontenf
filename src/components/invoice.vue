@@ -6,19 +6,19 @@
                     <button type="button" class="btn btn-secondary" @click="saveInvoice">
                         {{texto}}
                     </button>
-                    <button type="button" class="btn btn-secondary" @click="openModalPreviewPdf">
+                    <button type="button" class="btn btn-secondary" :disabled="texto=='Guardar'" data-toggle="tooltip" data-placement="top" :title="texto=='Guardar'?'guarde primero la factura':'Previsualizar Pdf'" @click="openModalPreviewPdf">
                         Ver PDF
                     </button>
                 </div>
             </div>
         </div>
-        <div class="bg-personalice p-4">
-            <ValidationObserver ref="observer">
-                <div class="row">
-                    <div class="col-12 col-sm-3">
+        <ValidationObserver ref="observer">
+            <div class="container container-invoice">
+                <div class="row border-top p-4">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <img src="../assets/Emik.jpeg" alt="" width="250" />
                     </div>
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                         <h4>Silvia Milena Botero Orozco</h4>
                         <p>
                             <strong>NIF:</strong><span>1019.040260-1</span>
@@ -29,15 +29,15 @@
                             silvia.boteroderecho@gmail.com
                         </p>
                     </div>
-                    <div class="col-12 col-sm-3">
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3">
                         <!-- <p> -->
-                        <strong>Factura:</strong>
                         <ValidationProvider v-slot="{errors}" rules="required" name="N° Factura">
-                            <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" style="width: 180px;" />                      
+                            <!-- <strong>Factura:</strong> -->
+                            <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" maxlength="10" style="width: 180px;" />                      
                             <span class="text-danger f-10">{{errors[0]}}</span>
                         </ValidationProvider>
                         <br />
-                        <strong>Fecha:</strong>
+                        <!-- <strong>Fecha:</strong> -->
                         <ValidationProvider v-slot="{errors}" rules="required" name="Fecha">
                             <input v-model="form.date" type="date" class="form-control" style="width=170px" />                          
                             <span class="text-danger f-10">{{errors[0]}}</span>
@@ -48,8 +48,9 @@
                         <!-- </p> -->
                     </div>
                 </div>
+                <hr class="mb-4" />
                 <div class="row">
-                    <div class="col-12 col-sm-10 col-md-6 col-lg-3  text-left">
+                    <div class="col-12 col-sm-10 col-md-6 col-lg-5  text-left">
                         <h5>Cliente</h5>
                         <ValidationProvider v-slot="{errors}" rules="required" name="Cliente">
                             <select v-model="form.customerId" class="form-control" @change="selectCustomer">
@@ -57,7 +58,7 @@
                             </select>
                             <span class="text-danger f-10">{{errors[0]}}</span>
                         </ValidationProvider>
-                        <p>
+                        <p class="pt-4 pl-3">
                             {{customer.name}}<br />
                             <strong>NIF:</strong><span>{{customer.nit}}</span><br />
                             {{customer.address}}<br />
@@ -77,7 +78,7 @@
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-condensed">
-                                        <thead>
+                                        <thead class="table-primary">
                                             <tr>
                                                 <th style="width: 65px;" />
                                                 <th><strong>Artículo</strong></th>
@@ -88,7 +89,7 @@
                                                 <th class="text-center" style="width: 65px;">
                                                     <strong>Cant</strong>
                                                 </th>
-                                                <th class="text-right">
+                                                <th class="text-right" style="min-width: 119px;">
                                                     <strong>Total</strong>
                                                 </th>
                                             </tr>
@@ -105,19 +106,19 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <select v-model="item.productId" class="form-control">
+                                                    <select v-model="item.productId" class="form-control  form-control-sm">
                                                         <option v-for="(list, idx3) in opctionsProduct" :key="idx3" :value="list._id">{{list.nameShow}}</option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input v-model="item.description" type="text" class="form-control" />
+                                                    <input v-model="item.description" type="text" class="form-control form-control-sm" />
                                                 </td>
                                                 <td class="text-center">
-                                                    <vue-numeric v-model="item.price" currency="$" separator="," class="form-control" style="width: 120px;" @input.native="recalculate" />
+                                                    <vue-numeric v-model="item.price" currency="$" separator="," class="form-control form-control-sm" style="width: 120px;" maxlenght="10" @input.native="recalculate" />
                                                 </td>
                                                 <td class="text-center" style="width: 60px;">
                                                     <ValidationProvider v-slot="{errors}" rules="required|numeric" name="cantidad">
-                                                        <vue-numeric v-model="item.quantity" currency="" separator="," maxlength="4" class="form-control" style="width: 60px;" @input.native="recalculate" />
+                                                        <vue-numeric v-model="item.quantity" currency="" separator="," maxlength="4" class="form-control form-control-sm" style="width: 60px;" @input.native="recalculate" />
                                                         <span class="text-danger f-10">{{errors[0]}}</span>
                                                     </ValidationProvider>
                                                 </td>
@@ -168,8 +169,8 @@
                         </div>
                     </div>
                 </div>
-            </ValidationObserver>
-        </div>
+            </div>
+        </ValidationObserver>
         <ModalPreviewInvoice ref="modalPreviewInvoice" />
     </section>
 </template>
@@ -302,7 +303,8 @@ export default {
                 }
                 this.form.products = this.products
                 const {data} = await this.$axios.post('invoice', this.form).catch(e =>this.HandlingErrors(e))
-                this.notification('Mensaje', 'Producto guardado', 'success')
+                this.notification('Mensaje', 'Factura guardada', 'success')
+                this.listInvoice()
                 
             } catch (error){
                 console.log('del catch', error);
@@ -335,5 +337,9 @@ export default {
 .bg-personalice{
     /* background-color: '#ebece'; */
         background: rgb(229, 241, 237);
+}
+.container-invoice{
+    border-left: #96327c solid 2px;
+    border-right: #96327c solid 1px;
 }
 </style>
