@@ -26,7 +26,7 @@
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Tipo Identificación</label>
                                             <select v-model="form.typeId" class="form-control">
-                                                <option v-for="(tipo, idx) in optionstype" :key="idx" :value="tipo.id">{{tipo.name}}</option>
+                                                <option v-for="(tipo, idx) in optionstype" :key="idx" :value="tipo.name">{{tipo.name}}</option>
                                             </select>
                                         </div>
                                     </div>

@@ -73,6 +73,7 @@
                             {{customer.name}}<br />
                             <strong>{{customer.typeId}}: </strong><span>{{customer.nit}}</span><br />
                             {{customer.address}}<br />
+                            {{customer.city}}<br />
                             {{customer.phone}}<br />
                             {{customer.email}}
                         </p>
@@ -205,7 +206,7 @@ export default {
             customer:{
                 _id: null,
                 name: null,
-                typeId: 1,
+                typeId: 'NIT',
                 nit: null,
                 address: null,
                 phone: null,
@@ -324,9 +325,18 @@ export default {
                     return false
                 }
                 this.form.products = this.products
-                const {data} = await this.$axios.post('invoice', this.form).catch(e =>this.HandlingErrors(e))
-                this.notification('Mensaje', 'Factura guardada', 'success')
-                this.listInvoice()
+                if(this.id_factura !==null || this.id_factura !== ''){
+                    const {data} = await this.$axios.put('invoice', this.form).catch(e =>this.HandlingErrors(e))
+                    this.notification('Mensaje', 'Factura editada', 'success')
+                    this.id_factura = data.body._id
+                    this.listInvoice()
+                }else{
+                    const {data} = await this.$axios.post('invoice', this.form).catch(e =>this.HandlingErrors(e))
+                    this.notification('Mensaje', 'Factura guardada', 'success')
+                    this.$router.push({name:'invoice.edit', params:{id_factura: data.body._id}})
+                    this.id_factura = data.body._id
+                    this.listInvoice()
+                }
                 
             } catch (error){
                 console.log('del catch', error);
