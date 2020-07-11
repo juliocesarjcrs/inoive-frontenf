@@ -1,6 +1,6 @@
 <template>
     <div ref="modaldeletedProducts" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Eliminar Producto</h5>
@@ -8,7 +8,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-center">
                     <p>¿Esta seguro de eliminar este producto?</p>
                 </div>
                 <div class="modal-footer">

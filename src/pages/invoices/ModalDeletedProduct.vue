@@ -1,15 +1,15 @@
 <template>
     <div ref="modaldeletedProducts" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Eliminar Cliente</h5>
+                    <h5 class="modal-title">Eliminar Factura</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <p>¿Esta seguro de eliminar este cliente?</p>
+                <div class="modal-body text-center">
+                    <p>¿Esta seguro de eliminar esta factura?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -38,8 +38,8 @@ export default {
         },
         async deleteProduct(){
             try {
-                const {data} = await this.$axios.delete(`customer/${this.id}`).catch(e =>this.HandlingErrors(e))
-                this.notification('Mensaje', 'Producto eliminado', 'success')
+                const {data} = await this.$axios.delete(`invoice/${this.id}`).catch(e =>this.HandlingErrors(e))
+                this.notification('Mensaje', 'Factura eliminada', 'success')
                 this.$emit('update')
                 $(this.$refs.modaldeletedProducts).modal('toggle')
             } catch (e){

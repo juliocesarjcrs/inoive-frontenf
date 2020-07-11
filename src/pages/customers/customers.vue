@@ -44,7 +44,7 @@
                         </th>
                         <td>{{product.name}}</td>
                         <td>{{product.nit}}</td>
-                        <td>{{product.address}}</td>
+                        <td>{{product.address}} - {{product.city}}</td>
                         <td>{{product.phone}}</td>
                         <td>{{product.email}}</td>
                         <td>

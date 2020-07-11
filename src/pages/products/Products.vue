@@ -20,9 +20,9 @@
                         <th scope="col">
                             Nombre
                         </th>
-                        <th scope="col">
+                        <!-- <th scope="col">
                             Categoria
-                        </th>
+                        </th> -->
                         <th scope="col">
                             Subcategoria
                         </th>
@@ -40,7 +40,7 @@
                             {{idx+1}}
                         </th>
                         <td>{{product.nameShow}}</td>
-                        <td>{{product.categoria}}</td>
+                        <!-- <td>{{product.category}}</td> -->
                         <td>{{product.subcategory}}</td>
                         <td>{{format_number(product.unitPrice)}}</td>
                         <td>

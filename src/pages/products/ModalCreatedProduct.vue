@@ -117,7 +117,7 @@ export default {
                 _id: null,
                 name: null,
                 nameShow: null,
-                category: 1,
+                category: 'Salud',
                 subcategory: 'Guantes',
                 unitPrice: 0,
                 descripction: null,
@@ -169,8 +169,11 @@ export default {
     },
     computed:{
         nameProduct(){
-            let name = `${this.form.subcategory} ${this.form.name}`
+            let name = `${this.form.subcategory}`
             // console.log('this.form.color', this.form.color);
+            if(this.form.name !== '' && this.form.name !==null){
+                name =  name.concat(' - '+this.form.name)
+            }
             if(this.form.packing !== 'Ninguno' && this.form.packing !==null){
                 name =  name.concat(' - '+this.form.packing)
             }
@@ -216,6 +219,10 @@ export default {
                     return false
                 }
                 this.form.nameShow = this.nameProduct
+                if (this.form.nameShow === null || this.form.nameShow=== ''){
+                    this.notification('Mensaje', 'Nombre es necesario', 'warning')
+                    return false
+                }
                 if(this.modeEdit){
                     const {data} = await this.$axios.put('product', this.form).catch(e =>this.HandlingErrors(e))
 
@@ -236,7 +243,7 @@ export default {
                 _id: null,
                 name: null,
                 nameShow: null,
-                category: 1,
+                category: 'Salud',
                 subcategory: 'Guantes',
                 unitPrice: 0,
                 descripction: null,
@@ -246,15 +253,6 @@ export default {
                 size: null,
             },
             this.modeEdit= false
-        },
-        addTag(newTag){
-            const tag = {
-                name: newTag,
-                
-                code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
-            }
-            this.optionsCategory.push(tag)
-            //   this.form.push(tag)
         }
     }
 }

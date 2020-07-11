@@ -17,24 +17,18 @@
                                         <div class="">
                                             <section>
                                                 <div class="row">
-                                                    <div class="col-12 col-sm-3">
+                                                    <div class="col-12 col-sm-3 col-md-4 col-lg-3">
                                                         <img src="../assets/Emik.jpeg" alt="" width="172" />
                                                     </div>
-                                                    <!-- <div id="primero" class="col-12 col-sm-6">
-                                                        <h5>Silvia Milena Botero Orozco</h5>
-                                                        <h6><strong>NIT:</strong><span>1019.040260-1</span></h6>
-                                                        <div>Circunvalar 36 A No 104-25 Puerto Varas</div>
-                                                        <div>313 276 1187</div>
-                                                        <div>silvia.boteroderecho@gmail.com</div>
-                                                    </div> -->
-                                                    <div id="primero" style="text-align: center;">
-                                                        <h5>Silvia Milena Botero Orozco</h5>
-                                                        <h6><strong>NIT:</strong><span>1019.040260-1</span></h6>
-                                                        <div>Circunvalar 36 A No 104-25 Puerto Varas</div>
-                                                        <div>313 276 1187</div>
-                                                        <div>silvia.boteroderecho@gmail.com</div>
+                                                    <div id="primero" class="col-12 col-sm-9 col-md-8 col-lg-6" style="text-align: center;">
+                                                        <h5>{{user.name}}</h5>
+                                                        <h6><strong>{{user.typeId}} :</strong><span>{{user.nit}}</span></h6>
+                                                        <div>{{user.address}}</div>
+                                                        <div>{{user.city}}</div>
+                                                        <div>{{user.phone}}</div>
+                                                        <div>{{user.email}}</div>
                                                     </div>
-                                                    <div class="col-12 col-sm-3">
+                                                    <div class="col-12 col-sm-5 col-md-5 col-lg-3">
                                                         <p>
                                                             <strong>Factura:</strong>
                                                             {{form.code}}
@@ -54,7 +48,7 @@
                                                         <h5>Cliente</h5>
                                                         <p>
                                                             {{customer.name}}<br />
-                                                            <strong>NIF:</strong><span>{{customer.nit}}</span><br />
+                                                            <strong>{{customer.typeId}}: </strong><span>{{customer.nit}}</span><br />
                                                             {{customer.address}}<br />
                                                             {{customer.phone}}<br />
                                                             {{customer.email}}
@@ -157,14 +151,15 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary" @click="downloadWithCSS">
+                    <!-- <button type="button" class="btn btn-primary" @click="downloadWithCSS">
                         PDF estilo imagenes
-                    </button>
+                    </button> -->
                     <button type="button" class="btn btn-primary" @click="prueba">
-                        PDF
-                    </button> <button type="button" class="btn btn-primary" @click="imprimir">
+                        Descargar PDF
+                    </button> 
+                    <!-- <button type="button" class="btn btn-primary" @click="imprimir">
                         imorimir
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -198,12 +193,23 @@ export default {
                 email: null,
             },
             opctionsProduct:[],
-            optionsCustomers:[]
+            optionsCustomers:[],
+            user:{
+                _id: null,
+                name: null,
+                typeId: 2,
+                nit: null,
+                address: null,
+                city:null,
+                phone: null,
+                email: null,
+            },
   
         }
     },
     methods:{
-        openModal(form, customer, productos){
+        openModal(form, customer, productos, user){
+            this.user = user
             let temp = form
             temp.products = productos
             this.form= temp

@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Crear   Cliente</h5>
+                    <h5 class="modal-title">Crear usuario</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -26,7 +26,7 @@
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Tipo Identificación</label>
                                             <select v-model="form.typeId" class="form-control">
-                                                <option v-for="(tipo, idx) in optionstype" :key="idx" :value="tipo.id">{{tipo.name}}</option>
+                                                <option v-for="(tipo, idx) in optionstype" :key="idx" :value="tipo.name">{{tipo.name}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -143,13 +143,13 @@ export default {
                     return false
                 }
                 if(this.modeEdit){
-                    const {data} = await this.$axios.put('customer', this.form).catch(e =>this.HandlingErrors(e))
+                    const {data} = await this.$axios.put('user', this.form).catch(e =>this.HandlingErrors(e))
 
                 }else{
-                    const {data} = await this.$axios.post('customer', this.form).catch(e =>this.HandlingErrors(e))
+                    const {data} = await this.$axios.post('user', this.form).catch(e =>this.HandlingErrors(e))
 
                 }
-                this.notification('Mensaje', 'Producto guardado', 'success')
+                this.notification('Mensaje', 'Perfil guardado', 'success')
                 this.$emit('update')
                 $(this.$refs.modalCreated).modal('toggle')
             } catch (e){

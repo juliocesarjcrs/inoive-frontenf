@@ -19,7 +19,18 @@
                         <img src="../assets/Emik.jpeg" alt="" width="250" />
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                        <h4>Silvia Milena Botero Orozco</h4>
+                        <h4>{{user.name}}</h4>
+                        <p>
+                            <strong>{{user.typeId}}: </strong><span>{{user.nit}}</span>
+                            <br />
+                            {{user.address}}
+                            <br />
+                            {{user.city}}
+                            <br />
+                            {{user.phone}}<br />
+                            {{user.email}}
+                        </p>
+                        <!-- <h4>Silvia Milena Botero Orozco</h4>
                         <p>
                             <strong>NIF:</strong><span>1019.040260-1</span>
                             <br />
@@ -27,7 +38,7 @@
                             <br />
                             313 276 1187<br />
                             silvia.boteroderecho@gmail.com
-                        </p>
+                        </p> -->
                     </div>
                     <div class="col-12 col-sm-12 col-md-3 col-lg-3">
                         <!-- <p> -->
@@ -60,7 +71,7 @@
                         </ValidationProvider>
                         <p class="pt-4 pl-3">
                             {{customer.name}}<br />
-                            <strong>NIF:</strong><span>{{customer.nit}}</span><br />
+                            <strong>{{customer.typeId}}: </strong><span>{{customer.nit}}</span><br />
                             {{customer.address}}<br />
                             {{customer.phone}}<br />
                             {{customer.email}}
@@ -82,7 +93,7 @@
                                             <tr>
                                                 <th style="width: 65px;" />
                                                 <th><strong>Artículo</strong></th>
-                                                <th><strong>Descripción</strong></th>
+                                                <!-- <th><strong>Descripción</strong></th> -->
                                                 <th class="text-center">
                                                     <strong>Precio</strong>
                                                 </th>
@@ -110,9 +121,9 @@
                                                         <option v-for="(list, idx3) in opctionsProduct" :key="idx3" :value="list._id">{{list.nameShow}}</option>
                                                     </select>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                     <input v-model="item.description" type="text" class="form-control form-control-sm" />
-                                                </td>
+                                                </td> -->
                                                 <td class="text-center">
                                                     <vue-numeric v-model="item.price" currency="$" separator="," class="form-control form-control-sm" style="width: 120px;" maxlenght="10" @input.native="recalculate" />
                                                 </td>
@@ -129,7 +140,7 @@
                                             <tr>
                                                 <td class="thick-line" />
                                                 <td class="thick-line" />
-                                                <td class="thick-line" />
+                                                <!-- <td class="thick-line" /> -->
                                                 <td class="thick-line" />
                                                 <td class="thick-line text-center">
                                                     <strong>Subtotal</strong>
@@ -141,7 +152,7 @@
                                             <tr>
                                                 <td class="no-line" />
                                                 <td class="no-line" />
-                                                <td class="no-line" />
+                                                <!-- <td class="no-line" /> -->
                                                 <td class="no-line" />
                                                 <td class="no-line text-center">
                                                     <strong>Impuestos</strong>
@@ -153,7 +164,7 @@
                                             <tr>
                                                 <td class="no-line" />
                                                 <td class="no-line" />
-                                                <td class="no-line" />
+                                                <!-- <td class="no-line" /> -->
                                                 <td class="no-line" />
                                                 <td class="no-line text-center">
                                                     <strong>Total</strong>
@@ -210,7 +221,17 @@ export default {
                 }
             ],
             opctionsProduct:[],
-            optionsCustomers:[]
+            optionsCustomers:[],
+            user:{
+                _id: null,
+                name: null,
+                typeId: 2,
+                nit: null,
+                address: null,
+                city:null,
+                phone: null,
+                email: null,
+            },
 
         }
     },
@@ -227,6 +248,7 @@ export default {
         this.SelectListarProducts()
         this.listarCustomers()
         this.listInvoice()
+        this.listUser()
     },
     methods:{
         recalculate(){   
@@ -265,7 +287,7 @@ export default {
                 }
                 return e
             })
-            this.$refs.modalPreviewInvoice.openModal(this.form, this.customer, productos)
+            this.$refs.modalPreviewInvoice.openModal(this.form, this.customer, productos, this.user)
         },
         async SelectListarProducts(){
             try {
@@ -325,7 +347,15 @@ export default {
                 console.log('del catch', e);
             }
 
-        }
+        },
+        async listUser(){
+            try {
+                const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
+                this.user = data.body                
+            } catch (e){
+                console.error(e)
+            }
+        },
     }
     
 }
