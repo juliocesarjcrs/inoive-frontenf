@@ -15,6 +15,7 @@ import User from '../pages/users/users.vue'
 // `Vue.extend()`, or just a component options object.
 // We'll talk about nested routes later.
 const routes = [
+    { path: '/',name:'invoice.list',  component: ListInvoices },
     { path: '/facturas/list',name:'invoice.list',  component: ListInvoices },
     { path: '/facturas/edit/:id_factura',name:'invoice.edit',  component: EditInvoice },
     { path: '/products', component: Products },
