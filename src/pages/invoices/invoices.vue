@@ -81,10 +81,10 @@ export default {
                 const {data} = await this.$axios.get('invoice').catch(e =>this.HandlingErrors(e))
                 this.listProducts = data.body               
                 this.listProducts.map(e =>{
-                    e.date = moment(e.date).format('MMMM Do YYYY');
+                    e.date = moment(e.date).utc().format('MMMM Do YYYY');
                 })               
             } catch (e){
-                console.error(e)
+                this.error_catch(e)
             }
         },
         edit(product){

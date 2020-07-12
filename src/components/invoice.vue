@@ -40,9 +40,9 @@
                             silvia.boteroderecho@gmail.com
                         </p> -->
                     </div>
-                    <div class="col-12 col-sm-12 col-md-3 col-lg-3">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-3">
                         <!-- <p> -->
-                        <ValidationProvider v-slot="{errors}" rules="required" name="N° Factura">
+                        <ValidationProvider v-slot="{errors}" rules="required|numeric|min_value:1" name="N° Factura">
                             <!-- <strong>Factura:</strong> -->
                             <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" maxlength="10" style="width: 180px;" />                      
                             <span class="text-danger f-10">{{errors[0]}}</span>
@@ -295,7 +295,7 @@ export default {
                 const {data} = await this.$axios.get('product')
                 this.opctionsProduct = data.body                
             } catch (e){
-                console.error(e)
+                this.error_catch(e)
             }
         },
         async listarCustomers(){
@@ -303,7 +303,7 @@ export default {
                 const {data} = await this.$axios.get('customer').catch(e =>this.HandlingErrors(e))
                 this.optionsCustomers = data.body                
             } catch (e){
-                console.error(e)
+                this.error_catch(e)
             }
         },
         selectCustomer(){
@@ -325,7 +325,7 @@ export default {
                     return false
                 }
                 this.form.products = this.products
-                if(this.id_factura !==null || this.id_factura !== ''){
+                if(this.id_factura !==null && this.id_factura !== '' && this.id_factura !== undefined){
                     const {data} = await this.$axios.put('invoice', this.form).catch(e =>this.HandlingErrors(e))
                     this.notification('Mensaje', 'Factura editada', 'success')
                     this.id_factura = data.body._id
@@ -346,15 +346,17 @@ export default {
         async listInvoice(){
             try {
                 if(this.id_factura=== undefined || this.id_factura ===null){
+                    const {data} = await this.$axios.get(`last/invoice`).catch(e =>this.HandlingErrors(e))
+                    this.form.code = data.body
                     return false
                 }
                 const {data} = await this.$axios.get(`invoice/${this.id_factura}`).catch(e =>this.HandlingErrors(e))
                 this.form = data.body
-                this.form.date = moment(this.form.date).format('YYYY-MM-DD');
+                this.form.date = moment(this.form.date).utc().format('YYYY-MM-DD');
                 this.products = data.body.products
                 this. selectCustomer()
             } catch (e){
-                console.log('del catch', e);
+                this.error_catch(e)
             }
 
         },
@@ -363,7 +365,7 @@ export default {
                 const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
                 this.user = data.body                
             } catch (e){
-                console.error(e)
+                this.error_catch(e)
             }
         },
     }

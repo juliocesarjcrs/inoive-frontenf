@@ -62,7 +62,7 @@ export default {
                 const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
                 this.form = data.body                
             } catch (e){
-                console.error(e)
+                this.error_catch(e)
             }
         },
         editProduct(product){

@@ -327,10 +327,10 @@ export default {
             if (base64Img){
                 doc.addImage(base64Img, 'JPEG', 10, 15, 53, 28)
             }
-            doc.text(60, 20, 'Silvia Milena Botero Orozco');
+            doc.text(60, 20, `${this.user.name}`);
             doc.setFontSize(10);
             doc.setFontType("bold");
-            doc.text(60, 25, 'NIT:1019.040260-1');
+            doc.text(60, 25, 'NIT:1019.040.260-1');
             doc.setFontType("normal");
             doc.text(60, 30, 'Circunvalar 36 A No 104-25 Puerto Varas');
             doc.text(60, 35, '313 276 1187');
@@ -359,7 +359,9 @@ export default {
             doc.text(clientX, yinit+15, `Nit: ${this.customer.nit}`);
             doc.text(clientX, yinit+20, `${this.customer.address}`);
             doc.text(clientX, yinit+25, `${this.customer.phone}`);
-            doc.text(clientX, yinit+30, `${this.customer.email}`);
+            if(this.customer.email !==null){
+                doc.text(clientX, yinit+30, `${this.customer.email}`);
+            }
 
             doc.line(15, 90, 190, 90);
             // tabla
@@ -388,10 +390,18 @@ export default {
             //     'width': 150,
             //     'elementHandlers': elementHandler
             // });
-            doc.save('abc.pdf');
+            doc.save(`Factura_${this.form.code}-${this.form.date}.pdf`);
             
 
 
+        },
+        async listUser(){
+            try {
+                const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
+                this.user = data.body                
+            } catch (e){
+                this.error_catch(e)
+            }
         },
   
     }

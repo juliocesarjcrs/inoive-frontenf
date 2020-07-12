@@ -82,7 +82,7 @@ export default {
                 const {data} = await this.$axios.get('product').catch(e =>this.HandlingErrors(e))
                 this.listProducts = data.body                
             } catch (e){
-                console.error(e)
+                this.error_catch(e)
             }
         },
         editProduct(product){
