@@ -1,6 +1,6 @@
 <template>
     <section class="">
-        <div class="row mb-4">
+        <div class="row mb-4 container">
             <div class="col-12 col-sm-12 text-left">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button type="button" class="btn btn-secondary" @click="saveInvoice">
@@ -9,19 +9,22 @@
                     <button type="button" class="btn btn-secondary" :disabled="texto=='Guardar'" data-toggle="tooltip" data-placement="top" :title="texto=='Guardar'?'guarde primero la factura':'Previsualizar Pdf'" @click="openModalPreviewPdf">
                         Ver PDF
                     </button>
+                    <button type="button" class="btn btn-secondary" :disabled="texto=='Guardar'" data-toggle="tooltip" data-placement="top" :title="texto=='Guardar'?'guarde primero la factura':'Previsualizar Pdf'" @click="print">
+                        Imprimir
+                    </button>
                 </div>
             </div>
         </div>
         <ValidationObserver ref="observer">
             <div class="container container-invoice">
                 <div class="row border-top p-4">
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <img src="../assets/Emik.jpeg" alt="" width="250" />
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+                        <img src="../assets/Emik.jpeg" class="img-fluid" alt="" width="250" />
                     </div>
-                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-12 col-sm-6 col-md-8 col-lg-5 col-xl-6">
                         <h4>{{user.name}}</h4>
                         <p>
-                            <strong>{{user.typeId}}: </strong><span>{{user.nit}}</span>
+                            <strong>{{user.typeId}}: {{user.nit}} </strong>
                             <br />
                             {{user.address}}
                             <br />
@@ -30,36 +33,37 @@
                             {{user.phone}}<br />
                             {{user.email}}
                         </p>
-                        <!-- <h4>Silvia Milena Botero Orozco</h4>
-                        <p>
-                            <strong>NIF:</strong><span>1019.040260-1</span>
-                            <br />
-                            Circinvaalr 36 A No 104-25 Puerto Varas
-                            <br />
-                            313 276 1187<br />
-                            silvia.boteroderecho@gmail.com
-                        </p> -->
                     </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-3">
-                        <!-- <p> -->
-                        <ValidationProvider v-slot="{errors}" rules="required|numeric|min_value:1" name="N° Factura">
-                            <!-- <strong>Factura:</strong> -->
-                            <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" maxlength="10" style="width: 180px;" />                      
-                            <span class="text-danger f-10">{{errors[0]}}</span>
-                        </ValidationProvider>
-                        <br />
-                        <!-- <strong>Fecha:</strong> -->
-                        <ValidationProvider v-slot="{errors}" rules="required" name="Fecha">
-                            <input v-model="form.date" type="date" class="form-control" style="width=170px" />                          
-                            <span class="text-danger f-10">{{errors[0]}}</span>
-                        </ValidationProvider>
-                        <br />
-                        <strong>Saldo deudor</strong><br />
-                        {{format_number(form.subtotal)}}
-                        <!-- </p> -->
+                    <div class="col-12 col-sm-12 col-md-11 col-lg-4 col-xl-3">
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label font-weight-bold">FACTURA:</label>
+                            <div class="col-sm-8">
+                                <ValidationProvider v-slot="{errors}" rules="required|numeric|min_value:1" name="N° Factura">
+                                    <input v-model="form.code" type="text" class="form-control" placeholder="N° Factura" maxlength="5" style="min-width: 80px;" /> 
+                                    <span class="text-danger f-10">{{errors[0]}}</span>
+                                </ValidationProvider>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-md-3 col-form-label font-weight-bold">FECHA:</label>
+                            <div class="col-sm-10 col-md-9">
+                                <ValidationProvider v-slot="{errors}" rules="required" name="Fecha">
+                                    <input v-model="form.date" type="date" class="form-control" style="width=170px" />                          
+                                    <span class="text-danger f-10">{{errors[0]}}</span>
+                                </ValidationProvider>                           
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-right">
+                                <span class="font-weight-bold">SALDO DEUDOR</span>
+                                <br />
+                                {{format_number(form.subtotal)}}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <hr class="mb-4" />
+                <!-- cliente -->
                 <div class="row">
                     <div class="col-12 col-sm-10 col-md-6 col-lg-5  text-left">
                         <h5>Cliente</h5>
@@ -70,10 +74,9 @@
                             <span class="text-danger f-10">{{errors[0]}}</span>
                         </ValidationProvider>
                         <p class="pt-4 pl-3">
-                            {{customer.name}}<br />
-                            <strong>{{customer.typeId}}: </strong><span>{{customer.nit}}</span><br />
-                            {{customer.address}}<br />
-                            {{customer.city}}<br />
+                            <span class="font-weight-bold">{{customer.name}}</span><br />
+                            <span>{{customer.typeId}}: {{customer.nit}}</span><br />
+                            {{customer.address}} - {{customer.city}}<br />
                             {{customer.phone}}<br />
                             {{customer.email}}
                         </p>
@@ -82,26 +85,28 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
+                            <!-- <div class="panel-heading">
                                 <h3 class="panel-title">
                                     <strong>Resumen del pedido</strong>
                                 </h3>
-                            </div>
+                            </div> -->
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-condensed">
                                         <thead class="table-primary">
                                             <tr>
                                                 <th style="width: 65px;" />
-                                                <th><strong>Artículo</strong></th>
+                                                <th class="col-5 col-md-4 col-lg-3" style="min-width: 461px;">
+                                                    <strong>Artículo</strong>
+                                                </th>
                                                 <!-- <th><strong>Descripción</strong></th> -->
-                                                <th class="text-center">
+                                                <th class="col-2 col-md-3 col-lg-3 text-center">
                                                     <strong>Precio</strong>
                                                 </th>
-                                                <th class="text-center" style="width: 65px;">
+                                                <th class="col-2 col-md-2 col-lg-3 text-center" style="width: 65px;">
                                                     <strong>Cant</strong>
                                                 </th>
-                                                <th class="text-right" style="min-width: 119px;">
+                                                <th class="col-3 col-md-3 col-lg-3 text-right" style="min-width: 119px;">
                                                     <strong>Total</strong>
                                                 </th>
                                             </tr>
@@ -118,7 +123,7 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <select v-model="item.productId" class="form-control  form-control-sm">
+                                                    <select v-model="item.productId" class="form-control  form-control-sm" @change="establecerNombre">
                                                         <option v-for="(list, idx3) in opctionsProduct" :key="idx3" :value="list._id">{{list.nameShow}}</option>
                                                     </select>
                                                 </td>
@@ -215,10 +220,11 @@ export default {
             products:[
                 {
                     productId: null,
+                    nameShow: null,
                     description: null,
                     price: 0,
                     quantity: 0,
-                    total: 0
+                    total: 0,
                 }
             ],
             opctionsProduct:[],
@@ -245,11 +251,11 @@ export default {
             }
         }
     },
-    mounted(){
-        this.SelectListarProducts()
-        this.listarCustomers()
-        this.listInvoice()
-        this.listUser()
+    async mounted(){
+        await this.SelectListarProducts()
+        await this.listarCustomers()
+        await this.listUser()
+        await this.listInvoice()
     },
     methods:{
         recalculate(){   
@@ -259,6 +265,12 @@ export default {
                 subtotal = subtotal+ p.total
             })
             this.form.subtotal = subtotal
+        },
+        establecerNombre(item){
+            let producFind = this.opctionsProduct.find(p => p._id===item.productId)
+            if(producFind){
+                item.nameShow = producFind.nameShow
+            }
         },
         addProduc(idx){
             let hasEmpty = this.products.some(e => e.productId === null)
@@ -280,7 +292,8 @@ export default {
         removeProduc(idx){
             this.products.splice(idx,1)
         },
-        openModalPreviewPdf(){
+        async openModalPreviewPdf(){
+            await this.saveMovem()
             let productos = this.form.products.map(e =>{    
                 let producFind = this.opctionsProduct.find(p => p._id===e.productId)
                 if(producFind){
@@ -288,7 +301,19 @@ export default {
                 }
                 return e
             })
-            this.$refs.modalPreviewInvoice.openModal(this.form, this.customer, productos, this.user)
+            // this.$refs.modalPreviewInvoice.openModal(this.form, this.customer, productos, this.user)
+            this.$refs.modalPreviewInvoice.showPDFExternal(this.form, this.customer, productos, this.user)   
+        },
+        async print(){
+            await this.saveMovem()
+            let productos = this.form.products.map(e =>{    
+                let producFind = this.opctionsProduct.find(p => p._id===e.productId)
+                if(producFind){
+                    e.nameShow = producFind.nameShow
+                }
+                return e
+            })
+            this.$refs.modalPreviewInvoice.showPrint(this.form, this.customer, productos, this.user)   
         },
         async SelectListarProducts(){
             try {
@@ -342,6 +367,16 @@ export default {
                 console.log('del catch', error);
             }
 
+        },
+        async saveMovem(){
+            if(this.id_factura !==null && this.id_factura !== '' && this.id_factura !== undefined){
+                const {data} = await this.$axios.put('invoice', this.form).catch(e =>this.HandlingErrors(e))
+                this.notification('Mensaje', 'Factura editada', 'success')
+                this.id_factura = data.body._id
+                this.listInvoice()
+            }else{
+                this.notification('Mensaje', 'Tiene cambios sin guardar', 'warning') 
+            }
         },
         async listInvoice(){
             try {

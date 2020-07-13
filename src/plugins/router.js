@@ -7,6 +7,7 @@ import Products from '../pages/products/Products.vue'
 import Customers from '../pages/customers/customers.vue'
 import ListInvoices from '../pages/invoices/invoices.vue'
 import User from '../pages/users/users.vue'
+import NotFound from '../pages/NotFound.vue'
 // const Bar = { template: '<div>barrrrrrrrrrrrr</div>' }
 
 // 2. Define some routes
@@ -20,7 +21,8 @@ const routes = [
     { path: '/facturas/edit/:id_factura',name:'invoice.edit',  component: EditInvoice },
     { path: '/products', component: Products },
     { path: '/customers', component: Customers },
-    { path: '/user', name:'user', component: User }
+    { path: '/user', name:'user', component: User },
+    { path: '*', name:'NotFound', component: NotFound }
 ]
 
 // 3. Create the router instance and pass the `routes` option
