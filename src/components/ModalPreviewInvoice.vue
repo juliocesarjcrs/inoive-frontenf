@@ -469,12 +469,13 @@ export default {
 
         },
         async listUser(){
-            try {
-                const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
-                this.user = data.body                
-            } catch (e){
-                this.error_catch(e)
-            }
+            this.$store.dispatch('user/getLoggedUser')
+            // try {
+            //     const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
+            //     this.user = data.body                
+            // } catch (e){
+            //     this.error_catch(e)
+            // }
         },
   
     }

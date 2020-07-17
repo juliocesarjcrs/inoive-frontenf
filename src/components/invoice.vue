@@ -123,7 +123,7 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <select v-model="item.productId" class="form-control  form-control-sm" @change="establecerNombre">
+                                                    <select v-model="item.productId" class="form-control  form-control-sm" @change="establecerNombre(item)">
                                                         <option v-for="(list, idx3) in opctionsProduct" :key="idx3" :value="list._id">{{list.nameShow}}</option>
                                                     </select>
                                                 </td>
@@ -193,6 +193,7 @@
 </template>
 <script>
 import moment from 'moment'
+import {mapGetters} from 'vuex'
 export default {
     components:{
         ModalPreviewInvoice : () => import('./ModalPreviewInvoice')
@@ -229,20 +230,23 @@ export default {
             ],
             opctionsProduct:[],
             optionsCustomers:[],
-            user:{
-                _id: null,
-                name: null,
-                typeId: 2,
-                nit: null,
-                address: null,
-                city:null,
-                phone: null,
-                email: null,
-            },
+            // user:{
+            //     _id: null,
+            //     name: null,
+            //     typeId: 2,
+            //     nit: null,
+            //     address: null,
+            //     city:null,
+            //     phone: null,
+            //     email: null,
+            // },
 
         }
     },
     computed:{
+        ...mapGetters({
+            user: 'user/user'
+        }),
         texto(){
             if(this.id_factura=== undefined || this.id_factura ===null){
                 return 'Guardar'
@@ -396,12 +400,13 @@ export default {
 
         },
         async listUser(){
-            try {
-                const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
-                this.user = data.body                
-            } catch (e){
-                this.error_catch(e)
-            }
+            this.$store.dispatch('user/getLoggedUser')
+            // try {
+            //     const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
+            //     this.user = data.body                
+            // } catch (e){
+            //     this.error_catch(e)
+            // }
         },
     }
     

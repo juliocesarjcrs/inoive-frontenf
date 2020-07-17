@@ -10,7 +10,87 @@
                 </button>
             </div>
         </div>
-        <div class="table-responsive-sm">
+        <!-- <v-app id="inspire">
+            <v-card>
+                <v-card-title>
+                    <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
+                </v-card-title>
+                <v-data-table
+                :search="search"
+                :items="formListProduct" 
+                :headers="myHeaders"
+                :expanded.sync="expanded"
+                :single-expand="singleExpand"
+                show-expand
+                :footer-props="{'items-per-page options': items_per_page}"
+                >
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon small class="mr-2" @click="edit(item)">
+                            mdi-pencil
+                        </v-icon>
+                        <v-icon small @click="deleted(item._id)">
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <template v-slot:expanded-item="{headers, item }">
+                        <td :colspan="headers.length">
+                            <ul v-for="(product, idx) in item.products" :key="idx">
+                                <li>{{product.nameShow}}-{{product.price}}-{{product.quantity}}</li>
+                            </ul>
+                        </td>
+                    </template>
+                </v-data-table>
+            </v-card>
+        </v-app> -->
+        <!-- <div id="app"> -->
+        <v-app id="inspire">
+            <v-card>
+                <v-card-title>
+                    <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
+                </v-card-title>
+                <v-data-table
+                :search="search"
+                :headers="myHeaders"
+                :items="formListProduct"
+                :single-expand="singleExpand"
+                :expanded.sync="expanded"
+                item-key="code"
+                show-expand
+                class="elevation-1"
+                >
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon small class="mr-2" @click="edit(item)">
+                            mdi-pencil
+                        </v-icon>
+                        <v-icon small @click="deleted(item._id)">
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <template v-slot:expanded-item="{ headers, item }">
+                        <td :colspan="headers.length">
+                            <!-- <ul v-for="(product, idx) in item.products" :key="idx">
+                                <li>{{product.nameShow}}-{{product.price}}-{{product.quantity}}</li>
+                            </ul> -->
+                            <div v-for="(product, idx) in item.products" :key="idx" class="row">
+                                <div class="col-8">
+                                    {{product.nameShow}}
+                                </div>
+                                <div class="col-2">
+                                    {{product.quantity}}                                 
+                                </div>
+                                <div class="col-2">
+                                    {{product.price}}                                      
+                                </div>
+                            </div>
+                        </td>
+                    </template>
+                </v-data-table>
+            </v-card>
+        </v-app>
+        <!-- </div> -->
+
+   
+        <!-- <div class="table-responsive-sm">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -54,8 +134,8 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <ModalDeletedProduct ref="ModalDeletedProduct" @update="listarProducts" />
+        </div> -->
+        <ModalDeletedProduct ref="ModalDeletedProduct" @update="listarInvoices" />
     </section>
 </template>
 <script>
@@ -66,23 +146,56 @@ export default {
     },
     data(){
         return{
-            listProducts: []
+            listProducts: [],
+            formListProduct:[],
+            search: '',
+            items_per_page : [20, 50, 100, 200],
+            singleExpand: true,
+            expanded: [],
+            myHeaders: [
+                {
+                    text: '#',
+                    align: 'start',
+                    value: 'code',
+                    itemsPerPage: 50
+                    
+                },
+                { text: 'Fecha', value: 'date' },
+                { text: 'Cliente', value: 'customer' },
+                { text: 'Valor total', value: 'subtotal' },
+                { text: 'Cant Productos', value: 'cant_products' },
+                { text: 'Opciones', value: 'actions',sortable: false },
+                { text: '', value: 'data-table-expand' },
+            ],
         }
     },
     mounted(){
-        this.listarProducts()
+        this.listarInvoices()
     },
     methods:{
         addInvoice(){
             this.$router.push({name:'invoice.edit'})
         },
-        async listarProducts(){
+        async listarInvoices(){
             try {
                 const {data} = await this.$axios.get('invoice').catch(e =>this.HandlingErrors(e))
                 this.listProducts = data.body               
                 this.listProducts.map(e =>{
                     e.date = moment(e.date).utc().format('MMMM Do YYYY');
-                })               
+                }) 
+                let datatable = this.listProducts.map(e =>{
+                    return { 
+                        _id:e._id, 
+                        code:e.code, 
+                        subtotal:e.subtotal, 
+                        date: e.date,
+                        customer: e.customerId.name,
+                        cant_products: e.products.length,
+                        products: e.products
+                    }
+                })  
+                console.log('datatable', datatable); 
+                this.formListProduct = datatable            
             } catch (e){
                 this.error_catch(e)
             }

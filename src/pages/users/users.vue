@@ -31,39 +31,47 @@
     </section>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 export default {
     components:{
         ModalUsuario : () => import('./ModalUsuario')
     },
     data(){
         return{
-            form:{
-                _id: null,
-                name: null,
-                typeId: '',
-                nit: null,
-                address: null,
-                city:null,
-                phone: null,
-                email: null,
-            },
+            // form:{
+            //     _id: null,
+            //     name: null,
+            //     typeId: '',
+            //     nit: null,
+            //     address: null,
+            //     city:null,
+            //     phone: null,
+            //     email: null,
+            // },
             listProducts: []
         }
     },
+    computed:{
+        ...mapGetters({
+            form: 'user/user'
+        })
+    },
     mounted(){
-        this.listUser()
+        this.$store.dispatch('user/getLoggedUser')
+        // this.listUser()
     },
     methods:{
         addProduc(){
             this.$refs.ModalUsuario.openModal(this.form)
         },
         async listUser(){
-            try {
-                const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
-                this.form = data.body                
-            } catch (e){
-                this.error_catch(e)
-            }
+            this.$store.dispatch('user/getLoggedUser')
+            // try {
+            //     const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
+            //     this.form = data.body                
+            // } catch (e){
+            //     this.error_catch(e)
+            // }
         },
         editProduct(product){
             this.$refs.ModalUsuario.openModal(product)

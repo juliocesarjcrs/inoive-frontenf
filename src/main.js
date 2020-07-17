@@ -4,6 +4,7 @@ import 'bootstrap'
 import './assets/app.css'
 import VueNumeric from 'vue-numeric'
 import router from './plugins/router'
+import vuetify from '@/plugins/vuetify' 
 Vue.use(VueNumeric)
 import { ValidationProvider, ValidationObserver, extend, localize } from 'vee-validate'
 // Register it globally
@@ -49,8 +50,12 @@ axios.defaults.baseURL = 'https://invoice-generetor-2.herokuapp.com/api';
 
 Vue.prototype.$axios = axios
 import Global from './mixins/global'
+
 Vue.mixin(Global)
+import store from './store'
 new Vue({
     render: h => h(App),
-    router
+    router,
+    store,
+    vuetify
 }).$mount('#app')

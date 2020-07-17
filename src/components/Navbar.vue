@@ -13,6 +13,9 @@
                             <router-link :to="{ name: 'invoice.list'}" class="dropdown-item">
                                 Lista 
                             </router-link>
+                            <router-link :to="{ name: 'invoice.edit'}" class="dropdown-item">
+                                Nueva 
+                            </router-link>
                         </div>
                     </li>
                     <li class="nav-item">
