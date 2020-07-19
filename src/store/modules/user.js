@@ -26,8 +26,8 @@ const mutations = {
 // actions
 const actions = {
     async getLoggedUser({ commit }){
-        // const {data} = await axios.get('user/5f0e3eadd5dcc6207c3fd5d8')
-        const {data} = await axios.get('user/5f0948da92d5b73308946151')
+        // const {data} = await axios.get('user/5f0e3eadd5dcc6207c3fd5d8') // local
+        const {data} = await axios.get('user/5f0948da92d5b73308946151') // produccion
         
         commit('SET_USER', data.body)
     }

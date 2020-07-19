@@ -1,5 +1,5 @@
 <template>
-    <section class="">
+    <section class="m-navbar">
         <div class="row mb-4 container">
             <div class="col-12 col-sm-12 text-left">
                 <div class="btn-group" role="group" aria-label="Basic example">
@@ -230,16 +230,6 @@ export default {
             ],
             opctionsProduct:[],
             optionsCustomers:[],
-            // user:{
-            //     _id: null,
-            //     name: null,
-            //     typeId: 2,
-            //     nit: null,
-            //     address: null,
-            //     city:null,
-            //     phone: null,
-            //     email: null,
-            // },
 
         }
     },
@@ -255,13 +245,24 @@ export default {
             }
         }
     },
+    watch:{
+        '$route.params.id_factura': function(id){
+            this.id_factura = id
+            this.startPage()
+        }
+
+    },
     async mounted(){
-        await this.SelectListarProducts()
-        await this.listarCustomers()
-        await this.listUser()
-        await this.listInvoice()
+        await this.startPage()
     },
     methods:{
+        async startPage(){
+            this.clearForm()
+            await this.SelectListarProducts()
+            await this.listarCustomers()
+            await this.listUser()
+            await this.listInvoice()
+        },
         recalculate(){   
             let subtotal = 0         
             this.products.map(p =>{             
@@ -273,7 +274,9 @@ export default {
         establecerNombre(item){
             let producFind = this.opctionsProduct.find(p => p._id===item.productId)
             if(producFind){
+                console.log('producFind', producFind);
                 item.nameShow = producFind.nameShow
+                item.price = producFind.unitPrice
             }
         },
         addProduc(idx){
@@ -368,7 +371,7 @@ export default {
                 }
                 
             } catch (error){
-                console.log('del catch', error);
+                this.error_catch(error)
             }
 
         },
@@ -401,13 +404,38 @@ export default {
         },
         async listUser(){
             this.$store.dispatch('user/getLoggedUser')
-            // try {
-            //     const {data} = await this.$axios.get('user/5f0948da92d5b73308946151').catch(e =>this.HandlingErrors(e))
-            //     this.user = data.body                
-            // } catch (e){
-            //     this.error_catch(e)
-            // }
         },
+        clearForm(){
+            this.form={
+                code: null,
+                date: null,
+                customerId: null,
+                subtotal: 0,
+                shipping: 0,
+                products:[]
+            }
+            this.customer ={
+                _id: null,
+                name: null,
+                typeId: 'NIT',
+                nit: null,
+                address: null,
+                phone: null,
+                email: null,
+            }
+            this.products=[
+                {
+                    productId: null,
+                    nameShow: null,
+                    description: null,
+                    price: 0,
+                    quantity: 0,
+                    total: 0,
+                }
+            ]
+            this.opctionsProduct=[]
+            this.optionsCustomers=[]
+        }
     }
     
 }
@@ -423,5 +451,8 @@ export default {
 .container-invoice{
     border-left: #96327c solid 2px;
     border-right: #96327c solid 1px;
+}
+.m-navbar{
+      margin-top: 50px;  
 }
 </style>

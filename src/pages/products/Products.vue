@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="m-navbar">
         <div class="row mr-4 mb-3">
             <div class="col-12 text-right">
                 <button class="btn btn-primary" @click="addProduc">
@@ -95,3 +95,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+    .m-navbar{
+        margin-top: 50px;  
+    }
+</style>

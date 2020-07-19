@@ -1,7 +1,7 @@
 <template>
-    <section>
-        <div class="row mr-4 mb-3">
-            <div class="col-12 text-right">
+    <section class="m-navbar">
+        <div class="row mr-4 mb-0">
+            <div class="col-12 text-right pb-0">
                 <button class="btn btn-primary" @click="addInvoice">
                     Agregar Factura
                     <span class="mr-2 ml-2" style="font-size: 1em;">
@@ -10,39 +10,6 @@
                 </button>
             </div>
         </div>
-        <!-- <v-app id="inspire">
-            <v-card>
-                <v-card-title>
-                    <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
-                </v-card-title>
-                <v-data-table
-                :search="search"
-                :items="formListProduct" 
-                :headers="myHeaders"
-                :expanded.sync="expanded"
-                :single-expand="singleExpand"
-                show-expand
-                :footer-props="{'items-per-page options': items_per_page}"
-                >
-                    <template v-slot:item.actions="{ item }">
-                        <v-icon small class="mr-2" @click="edit(item)">
-                            mdi-pencil
-                        </v-icon>
-                        <v-icon small @click="deleted(item._id)">
-                            mdi-delete
-                        </v-icon>
-                    </template>
-                    <template v-slot:expanded-item="{headers, item }">
-                        <td :colspan="headers.length">
-                            <ul v-for="(product, idx) in item.products" :key="idx">
-                                <li>{{product.nameShow}}-{{product.price}}-{{product.quantity}}</li>
-                            </ul>
-                        </td>
-                    </template>
-                </v-data-table>
-            </v-card>
-        </v-app> -->
-        <!-- <div id="app"> -->
         <v-app id="inspire">
             <v-card>
                 <v-card-title>
@@ -79,7 +46,7 @@
                                     {{product.quantity}}                                 
                                 </div>
                                 <div class="col-2">
-                                    {{product.price}}                                      
+                                    {{format_number(product.price)}}                                      
                                 </div>
                             </div>
                         </td>
@@ -87,54 +54,6 @@
                 </v-data-table>
             </v-card>
         </v-app>
-        <!-- </div> -->
-
-   
-        <!-- <div class="table-responsive-sm">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            #
-                        </th>
-                        <th scope="col">
-                            Fecha
-                        </th>
-                        <th scope="col">
-                            Cliente
-                        </th>
-                        <th scope="col">
-                            Valor total
-                        </th>
-                        <th scope="col">
-                            Cant Productos
-                        </th>
-                        <th scope="col">
-                            opciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(invoice, idx) in listProducts" :key="idx">
-                        <th scope="row">
-                            {{invoice.code}}
-                        </th>
-                        <td>{{invoice.date}}</td>
-                        <td>{{invoice.customerId.name}}</td>
-                        <td>{{format_number(invoice.subtotal)}}</td>
-                        <td>{{invoice.products.length}}</td>
-                        <td>
-                            <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="edit(invoice)">
-                                <i class="fas fa-edit" />
-                            </span>
-                            <span class="mr-2" style="font-size: 1em; color: tomato;" @click="deleted(invoice._id)">
-                                <i class="fas fa-window-close" />
-                            </span>                           
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
         <ModalDeletedProduct ref="ModalDeletedProduct" @update="listarInvoices" />
     </section>
 </template>
@@ -162,7 +81,7 @@ export default {
                 },
                 { text: 'Fecha', value: 'date' },
                 { text: 'Cliente', value: 'customer' },
-                { text: 'Valor total', value: 'subtotal' },
+                { text: 'Valor total', value: 'subtotal', align: 'end' },
                 { text: 'Cant Productos', value: 'cant_products' },
                 { text: 'Opciones', value: 'actions',sortable: false },
                 { text: '', value: 'data-table-expand' },
@@ -187,14 +106,13 @@ export default {
                     return { 
                         _id:e._id, 
                         code:e.code, 
-                        subtotal:e.subtotal, 
+                        subtotal: this.format_number(e.subtotal), 
                         date: e.date,
                         customer: e.customerId.name,
                         cant_products: e.products.length,
                         products: e.products
                     }
                 })  
-                console.log('datatable', datatable); 
                 this.formListProduct = datatable            
             } catch (e){
                 this.error_catch(e)
@@ -210,3 +128,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+.m-navbar{
+      margin-top: 50px;  
+}
+</style>

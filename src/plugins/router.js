@@ -8,6 +8,7 @@ import Customers from '../pages/customers/customers.vue'
 import ListInvoices from '../pages/invoices/invoices.vue'
 import User from '../pages/users/users.vue'
 import NotFound from '../pages/NotFound.vue'
+import Login from '../pages/auth/Login.vue'
 // const Bar = { template: '<div>barrrrrrrrrrrrr</div>' }
 
 // 2. Define some routes
@@ -17,6 +18,7 @@ import NotFound from '../pages/NotFound.vue'
 // We'll talk about nested routes later.
 const routes = [
     { path: '/', redirect: { name: 'invoice.list' } },
+    { path: '/login',name:'Login',  component: Login},
     { path: '/facturas/list',name:'invoice.list',  component: ListInvoices },
     { path: '/facturas/edit/:id_factura?',name:'invoice.edit',  component: EditInvoice },
     { path: '/products', component: Products },
