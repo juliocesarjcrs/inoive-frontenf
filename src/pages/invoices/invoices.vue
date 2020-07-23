@@ -21,7 +21,7 @@
                 :items="formListProduct"
                 :single-expand="singleExpand"
                 :expanded.sync="expanded"
-                item-key="code"
+                item-key="_id"
                 show-expand
                 class="elevation-1"
                 >

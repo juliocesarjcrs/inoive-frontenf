@@ -34,6 +34,7 @@ const actions = {
 }
 export default {
     namespaced: true,
+    name: 'user',
     state,
     getters,
     actions,

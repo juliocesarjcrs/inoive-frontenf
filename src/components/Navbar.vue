@@ -18,11 +18,25 @@
                             </router-link>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Productos</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <router-link to="/products" class="dropdown-item">
+                                Productos
+                            </router-link>
+                            <router-link :to="{ name: 'stock'}" class="dropdown-item">
+                                Compras 
+                            </router-link>
+                            <router-link :to="{ name: 'providers'}" class="dropdown-item">
+                                Proveedores 
+                            </router-link>
+                        </div>
+                    </li>
+                    <!-- <li class="nav-item">
                         <router-link to="/products" class="nav-link">
                             Products
                         </router-link>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <router-link to="/customers" class="nav-link">
                             Clientes

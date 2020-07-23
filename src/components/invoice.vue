@@ -99,7 +99,9 @@
                                                 <th class="col-5 col-md-4 col-lg-3" style="min-width: 461px;">
                                                     <strong>Artículo</strong>
                                                 </th>
-                                                <!-- <th><strong>Descripción</strong></th> -->
+                                                <th class="pr-0">
+                                                    <strong>D</strong>
+                                                </th>
                                                 <th class="col-2 col-md-3 col-lg-3 text-center">
                                                     <strong>Precio</strong>
                                                 </th>
@@ -127,9 +129,10 @@
                                                         <option v-for="(list, idx3) in opctionsProduct" :key="idx3" :value="list._id">{{list.nameShow}}</option>
                                                     </select>
                                                 </td>
-                                                <!-- <td>
-                                                    <input v-model="item.description" type="text" class="form-control form-control-sm" />
-                                                </td> -->
+                                                <td class="pr-0 pl-0 m-0">
+                                                    <v-checkbox v-model="item.discount" class="pt-0 m-0" />
+                                                    <!-- <input v-model="item.discount" class="form-check-input" type="checkbox" /> -->
+                                                </td>
                                                 <td class="text-center">
                                                     <vue-numeric v-model="item.price" currency="$" separator="," class="form-control form-control-sm" style="width: 120px;" maxlenght="10" @input.native="recalculate" />
                                                 </td>
@@ -146,7 +149,7 @@
                                             <tr>
                                                 <td class="thick-line" />
                                                 <td class="thick-line" />
-                                                <!-- <td class="thick-line" /> -->
+                                                <td class="thick-line" />
                                                 <td class="thick-line" />
                                                 <td class="thick-line text-center">
                                                     <strong>Subtotal</strong>
@@ -158,7 +161,7 @@
                                             <tr>
                                                 <td class="no-line" />
                                                 <td class="no-line" />
-                                                <!-- <td class="no-line" /> -->
+                                                <td class="no-line" />
                                                 <td class="no-line" />
                                                 <td class="no-line text-center">
                                                     <strong>Impuestos</strong>
@@ -170,7 +173,7 @@
                                             <tr>
                                                 <td class="no-line" />
                                                 <td class="no-line" />
-                                                <!-- <td class="no-line" /> -->
+                                                <td class="no-line" />
                                                 <td class="no-line" />
                                                 <td class="no-line text-center">
                                                     <strong>Total</strong>
@@ -226,6 +229,7 @@ export default {
                     price: 0,
                     quantity: 0,
                     total: 0,
+                    discount: true
                 }
             ],
             opctionsProduct:[],
@@ -274,7 +278,6 @@ export default {
         establecerNombre(item){
             let producFind = this.opctionsProduct.find(p => p._id===item.productId)
             if(producFind){
-                console.log('producFind', producFind);
                 item.nameShow = producFind.nameShow
                 item.price = producFind.unitPrice
             }
@@ -290,7 +293,8 @@ export default {
                 description: null,
                 price: 0,
                 quantity: 0,
-                total: 0
+                total: 0,
+                discount: true
             }
             let pos = idx +1         
             this.products.splice(pos,0, newProduct)
@@ -324,7 +328,7 @@ export default {
         },
         async SelectListarProducts(){
             try {
-                const {data} = await this.$axios.get('product')
+                const {data} = await this.$axios.get('product').catch(e =>this.HandlingErrors(e))
                 this.opctionsProduct = data.body                
             } catch (e){
                 this.error_catch(e)
@@ -431,6 +435,7 @@ export default {
                     price: 0,
                     quantity: 0,
                     total: 0,
+                    discount: true
                 }
             ]
             this.opctionsProduct=[]

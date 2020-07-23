@@ -3,40 +3,14 @@
         <div class="row mr-4 mb-3">
             <div class="col-12 text-right">
                 <button class="btn btn-primary" @click="addProduc">
-                    Agregar Producto
+                    Agregar Proveedor
                     <span class="mr-2 ml-2" style="font-size: 1em;">
                         <i class="fas fa-plus-square" />
                     </span>
                 </button>
             </div>
         </div>
-        <v-app id="inspire">
-            <v-card>
-                <v-card-title>
-                    <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
-                </v-card-title>
-                <v-data-table
-                :search="search"
-                :headers="myHeaders"
-                :items="listProducts"
-                item-key="_id"
-                class="elevation-1"
-                >
-                    <template v-slot:item.unitPrice="{ item }">
-                        {{format_number(item.unitPrice)}}
-                    </template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-icon small class="mr-2" @click="editProduct(item)">
-                            mdi-pencil
-                        </v-icon>
-                        <v-icon small @click="deleteProduct(item)">
-                            mdi-delete
-                        </v-icon>
-                    </template>
-                </v-data-table>
-            </v-card>
-        </v-app>
-        <!-- <div class="table-responsive-sm">
+        <div class="table-responsive-sm">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -47,10 +21,16 @@
                             Nombre
                         </th>
                         <th scope="col">
-                            Subcategoria
+                            NIT
                         </th>
                         <th scope="col">
-                            Precio
+                            Dirección
+                        </th>
+                        <th scope="col">
+                            Teléfono
+                        </th>
+                        <th scope="col">
+                            Email
                         </th>
                         <th scope="col">
                             opciones
@@ -62,9 +42,11 @@
                         <th scope="row">
                             {{idx+1}}
                         </th>
-                        <td>{{product.nameShow}}</td>
-                        <td>{{product.subcategory}}</td>
-                        <td>{{format_number(product.unitPrice)}}</td>
+                        <td>{{product.name}}</td>
+                        <td>{{product.nit}}</td>
+                        <td>{{product.address}} - {{product.city}}</td>
+                        <td>{{product.phone}}</td>
+                        <td>{{product.email}}</td>
                         <td>
                             <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="editProduct(product)">
                                 <i class="fas fa-edit" />
@@ -76,29 +58,20 @@
                     </tr>
                 </tbody>
             </table>
-        </div> -->
-        <ModalCreatedProduct ref="ModalCreatedProduct" @update="listarProducts" />
+        </div>
+        <ModalCreated ref="ModalCreated" @update="listarProducts" />
         <ModalDeletedProduct ref="ModalDeletedProduct" @update="listarProducts" />
     </section>
 </template>
 <script>
 export default {
     components:{
-        ModalCreatedProduct : () => import('./ModalCreatedProduct'),
+        ModalCreated : () => import('./ModalCreated'),
         ModalDeletedProduct : () => import('./ModalDeletedProduct')
     },
     data(){
         return{
-            listProducts: [],
-            search: '',
-            myHeaders: [
-                // { text: '#', align: 'start', value: 'code', itemsPerPage: 50 },
-                // { text: 'subcategory', value: 'subcategory' },
-                { text: 'Nombre', value: 'nameShow' },
-                { text: 'Precio venta', value: 'unitPrice', align:"end" },
-                { text: 'Stock', value: 'stock' },
-                { text: 'Opciones', value: 'actions',sortable: false }
-            ],
+            listProducts: []
         }
     },
     mounted(){
@@ -106,21 +79,21 @@ export default {
     },
     methods:{
         addProduc(){
-            this.$refs.ModalCreatedProduct.openModal()
+            this.$refs.ModalCreated.openModal()
         },
         async listarProducts(){
             try {
-                const {data} = await this.$axios.get('product').catch(e =>this.HandlingErrors(e))
+                const {data} = await this.$axios.get('provider').catch(e =>this.HandlingErrors(e))
                 this.listProducts = data.body                
             } catch (e){
                 this.error_catch(e)
             }
         },
         editProduct(product){
-            this.$refs.ModalCreatedProduct.openModal(product)
+            this.$refs.ModalCreated.openModal(product)
         },
-        deleteProduct(item){
-            this.$refs.ModalDeletedProduct.openModal(item)
+        deleteProduct(id){
+            this.$refs.ModalDeletedProduct.openModal(id)
             
         }
     }

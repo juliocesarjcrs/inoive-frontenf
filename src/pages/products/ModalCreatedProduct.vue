@@ -83,11 +83,20 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12 col-sm">
+                                    <div class="col-12 col-sm-7 col-md-9">
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Descripción</label>
                                             <ValidationProvider v-slot="{errors}" rules="max:200" name="Valor unitario">
                                                 <textarea v-model="form.descripction" class="form-control" rows="2" />
+                                                <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-5 col-md-3">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlSelect1">Stock</label>
+                                            <ValidationProvider v-slot="{errors}" rules="numeric|min_value:1" name="Stock">
+                                                <input v-model="form.stock" ype="text" class="form-control" placeholder="Inventario inicial" maxlength="5" />
                                                 <span class="text-danger f-10">{{errors[0]}}</span>
                                             </ValidationProvider>
                                         </div>
@@ -125,6 +134,7 @@ export default {
                 color: null,
                 type: null,
                 size: null,
+                stock:null
             },
             modeEdit: false,
             optionsCategory: [
@@ -251,6 +261,7 @@ export default {
                 color: null,
                 type: null,
                 size: null,
+                stock: null
             },
             this.modeEdit= false
         }

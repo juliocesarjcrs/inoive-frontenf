@@ -9,6 +9,9 @@ import ListInvoices from '../pages/invoices/invoices.vue'
 import User from '../pages/users/users.vue'
 import NotFound from '../pages/NotFound.vue'
 import Login from '../pages/auth/Login.vue'
+import Providers from '../pages/provider/providers.vue'
+import Stocks from '../pages/stock/stock.vue'
+
 // const Bar = { template: '<div>barrrrrrrrrrrrr</div>' }
 
 // 2. Define some routes
@@ -23,7 +26,9 @@ const routes = [
     { path: '/facturas/edit/:id_factura?',name:'invoice.edit',  component: EditInvoice },
     { path: '/products', component: Products },
     { path: '/customers', component: Customers },
+    { path: '/providers', name:'providers', component: Providers },
     { path: '/user', name:'user', component: User },
+    { path: '/stock', name:'stock', component: Stocks },
     { path: '*', name:'NotFound', component: NotFound }
 ]
 
