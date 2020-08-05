@@ -4,6 +4,7 @@ import 'bootstrap'
 import './assets/app.css'
 import VueNumeric from 'vue-numeric'
 import router from './plugins/router'
+import './plugins/axios'
 import vuetify from '@/plugins/vuetify' 
 Vue.use(VueNumeric)
 import { ValidationProvider, ValidationObserver, extend, localize } from 'vee-validate'
@@ -38,17 +39,17 @@ import Multiselect from 'vue-multiselect'
 // register globally
 Vue.component('multiselect', Multiselect)
 
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+// import axios from 'axios'
+// import VueAxios from 'vue-axios'
  
-Vue.use(VueAxios, axios)
-// Agregamos la URL base de nuestra API
+// Vue.use(VueAxios, axios)
+// // Agregamos la URL base de nuestra API
 // axios.defaults.baseURL = 'http://localhost:3000/api';
-axios.defaults.baseURL = 'https://invoice-generetor-2.herokuapp.com/api';
+// axios.defaults.baseURL = 'https://invoice-generetor-2.herokuapp.com/api';
 
 
 
-Vue.prototype.$axios = axios
+// Vue.prototype.$axios = axios
 import Global from './mixins/global'
 
 Vue.mixin(Global)

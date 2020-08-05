@@ -33,10 +33,10 @@
                                     <div class="col-12 col-md-7 col-lg-4">
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">N° Identificación</label>
-                                            <ValidationProvider v-slot="{errors}" rules="required" name="N° Identificación">
-                                                <input v-model="form.nit" ype="text" class="form-control" placeholder="N° Identificación" maxlength="15" />
-                                                <span class="text-danger f-10">{{errors[0]}}</span>
-                                            </ValidationProvider>
+                                            <!-- <ValidationProvider v-slot="{errors}" rules="required" name="N° Identificación"> -->
+                                            <input v-model="form.nit" ype="text" class="form-control" placeholder="N° Identificación" maxlength="15" />
+                                            <!-- <span class="text-danger f-10">{{errors[0]}}</span>
+                                            </ValidationProvider> -->
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@ export default {
             form:{
                 _id: null,
                 name: null,
-                typeId: 2,
+                typeId: 'CC',
                 nit: null,
                 address: null,
                 city:null,
@@ -153,7 +153,7 @@ export default {
                 this.$emit('update')
                 $(this.$refs.modalCreated).modal('toggle')
             } catch (e){
-                console.error('catch',e)
+                this.error_catch(e)
             }
             
         },
@@ -161,7 +161,7 @@ export default {
             this.form={
                 _id: null,
                 name: null,
-                typeId: 1,
+                typeId: 'CC',
                 nit: null,
                 address: null,
                 city:null,

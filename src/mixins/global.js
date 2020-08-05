@@ -1,5 +1,9 @@
 import miniToastr from 'mini-toastr'
 import Helper from '../services/helper'
+import moment from 'moment'
+import 'moment/locale/es';
+moment.locale('es');
+
 
 miniToastr.init()
 export default {
@@ -66,8 +70,8 @@ export default {
                 miniToastr.error(message, title)
             }
         },
-        format_date(){
-            moment().format('ll');
+        format_date(date){
+            return moment(date).utc().format('LLL');
         },
         format_number(number){         
             return  `$ ${new Intl.NumberFormat("de-DE").format(number)}`

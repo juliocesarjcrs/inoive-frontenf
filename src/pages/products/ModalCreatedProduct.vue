@@ -217,7 +217,8 @@ export default {
                 this.form.packing = product.packing
                 this.form.color = product.color
                 this.form.type = product.type
-                this.form.size = product.size               
+                this.form.size = product.size
+                this.form.stock = product.stock
             }
             $(this.$refs.modalCreatedProducts).modal('toggle')
         },

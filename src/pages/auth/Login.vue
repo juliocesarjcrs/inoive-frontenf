@@ -1,24 +1,32 @@
 <template>
     <section class="m-navbar">
-        <form class="form-signin">
-            <img class="mb-4" src="/docs/4.5/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
-            <h1 class="h3 mb-3 font-weight-normal">
-                Please sign in
-            </h1>
-            <label for="inputEmail" class="sr-only">Email address</label>
-            <input v-model="form.username" type="email" class="form-control" placeholder="Email address" required autofocus />
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input v-model="form.password" type="password" class="form-control" placeholder="Password" required />
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me" /> Remember me
-                </label>
+        <ValidationObserver ref="observer">
+            <div class="form-signin">
+                <img class="mb-4" src="../../assets/Emik.jpeg" alt="" width="200" height="72" />
+                <h1 class="h3 mb-3 font-weight-normal">
+                    Please sign in
+                </h1>
+                <label for="inputEmail" class="sr-only">Email address</label>
+                <ValidationProvider v-slot="{errors}" rules="required|email" name="email">
+                    <input v-model="form.email" type="email" class="form-control" placeholder="Email address" autofocus />
+                    <span class="text-danger f-10">{{errors[0]}}</span>
+                </ValidationProvider>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <ValidationProvider v-slot="{errors}" rules="required" name="password">
+                    <input v-model="form.pass" type="password" class="form-control" placeholder="Password" />
+                    <span class="text-danger f-10">{{errors[0]}}</span>
+                </ValidationProvider>
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" value="remember-me" /> Remember me
+                    </label>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" @click="login">
+                    Sign in
+                </button>
+                <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">
-                Sign in
-            </button>
-            <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
-        </form>
+        </ValidationObserver>
     </section>
 </template>
 <script>
@@ -26,8 +34,28 @@ export default {
     data(){
         return{
             form:{
-                username: null,
-                password: null
+                email: null,
+                pass: null
+            }
+        }
+    },
+    methods:{
+        async login(){
+            try {
+                const isValid = await this.$refs.observer.validate()
+                if (!isValid){
+                    this.notification('Mensaje', 'Campos necesarios', 'warning')
+                    return false
+                }
+                await this.$store.dispatch('auth/login', this.form)
+                this.$router.push({name:'invoice.list'})
+
+                // const {data} = await this.$axios.post('login', this.form).catch(e =>this.HandlingErrors(e))
+                // if(data.token){
+                //     localStorage.setItem('mytoken', data.token);
+                // }
+            } catch (e){
+                this.error_catch(e)
             }
         }
     }

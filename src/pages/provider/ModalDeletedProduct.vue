@@ -3,13 +3,13 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Eliminar Cliente</h5>
+                    <h5 class="modal-title">Eliminar Proveedor</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <p>¿Esta seguro de eliminar este cliente?</p>
+                    <p>¿Esta seguro de eliminar este Proveedor?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -38,12 +38,12 @@ export default {
         },
         async deleteProduct(){
             try {
-                const {data} = await this.$axios.delete(`customer/${this.id}`).catch(e =>this.HandlingErrors(e))
-                this.notification('Mensaje', 'Producto eliminado', 'success')
+                const {data} = await this.$axios.delete(`provider/${this.id}`).catch(e =>this.HandlingErrors(e))
+                this.notification('Mensaje', 'Proveedor eliminado', 'success')
                 this.$emit('update')
                 $(this.$refs.modaldeletedProducts).modal('toggle')
             } catch (e){
-                console.error('catch',e)
+                this.error_catch(e)
             }
             
         },

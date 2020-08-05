@@ -12,16 +12,45 @@
         </div>
         <v-app id="inspire">
             <v-card>
-                <v-card-title>
-                    <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
-                </v-card-title>
                 <v-data-table
-                :search="search"
-                :headers="myHeaders"
+                dense
+                :headers="my2Headers"
                 :items="listProducts"
                 item-key="_id"
                 class="elevation-1"
+                :items-per-page="15"
+                :footer-props="footerProps"
+                :single-expand="singleExpand"
+                :expanded.sync="expanded"
+                show-expand
+                @current-items="getFiltered"
                 >
+                    <template v-slot:body.prepend>
+                        <tr class="bgred">
+                            <td />
+                            <td>
+                                <v-text-field v-model="name" type="text" label="Marca/Nombre" />
+                            </td>
+                            <td>
+                                <v-select v-model="type" :items="optionsTipo" clearable label="Tipo" />
+                            </td>
+                            <td>
+                                <v-select v-model="color" :items="colores" clearable label="Color" />
+                            </td>
+                            <td>
+                                <v-select v-model="size" :items="optionsSize" clearable label="Tamaño" />
+                            </td>
+                            <td />
+                            <td>
+                                <v-text-field v-model="cant_stock" type="number" label="Mayor a" />
+                            </td>
+                        </tr>
+                    </template>
+                    <template v-slot:item.color="{ item }">
+                        <v-chip v-if="item.color !== null" :color="getColor(item.color)">
+                            {{item.color}}
+                        </v-chip>
+                    </template>
                     <template v-slot:item.unitPrice="{ item }">
                         {{format_number(item.unitPrice)}}
                     </template>
@@ -33,50 +62,89 @@
                             mdi-delete
                         </v-icon>
                     </template>
+                    <template v-slot:expanded-item="{ headers, item }">
+                        <td :colspan="headers.length">
+                            <v-simple-table dense>
+                                <template v-slot:default>
+                                    <thead class="elevation-1 blue-grey lighten-4">
+                                        <tr>
+                                            <th class="text-left">
+                                                Fecha
+                                            </th>
+                                            <th class="text-left">
+                                                Proveedor
+                                            </th>
+                                            <th class="text-center">
+                                                Valor comprado
+                                            </th>
+                                            <th class="text-left">
+                                                Cant
+                                            </th>
+                                            <th />
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(stock, idx) in item.allstocks" :key="idx">
+                                            <td>{{format_date(stock.date)}}</td>
+                                            <td>{{stock.providerId===null ?'Sin definir':stock.providerId.name}}</td>
+                                            <td class="text-center">
+                                                {{format_number(stock.price)}}
+                                            </td>
+                                            <td>{{stock.quantity}}</td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                            <!-- <div class="row">
+                                <div class="col-2">
+                                    Fecha
+                                </div>
+                                <div class="col-5">
+                                    Proveedor
+                                </div>
+                                <div class="col-2 text-right">
+                                    Precio
+                                </div>
+                                <div class="col-1">
+                                    Cantidad
+                                </div>
+                            </div>
+                            <div v-for="(stock, idx) in item.allstocks" :key="idx" class="row">
+                                <div class="col-2">
+                                    {{format_date(stock.date)}}                                 
+                                </div>
+                                <div class="col-5">
+                                    {{stock.providerId===null ?'Sin definir':stock.providerId.name}}
+                                </div>
+                                <div class="col-2 text-right">
+                                    {{format_number(stock.price)}}                                      
+                                </div>
+                                <div class="col-1">
+                                    {{stock.quantity}}                                 
+                                </div>
+                                <div class="col-1" />                               
+                            </div> -->
+                        </td>
+                    </template>
+                    <template slot="body.append">
+                        <tr class="green--text bgred">
+                            <th class="title">
+                                Totals
+                            </th>
+                            <th />
+                            <th />
+                            <th />
+                            <th />
+                            <th />
+                            <th class="title">
+                                {{totalStock}}
+                            </th>
+                            <th />
+                        </tr>
+                    </template>
                 </v-data-table>
             </v-card>
         </v-app>
-        <!-- <div class="table-responsive-sm">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            #
-                        </th>
-                        <th scope="col">
-                            Nombre
-                        </th>
-                        <th scope="col">
-                            Subcategoria
-                        </th>
-                        <th scope="col">
-                            Precio
-                        </th>
-                        <th scope="col">
-                            opciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(product, idx) in listProducts" :key="idx">
-                        <th scope="row">
-                            {{idx+1}}
-                        </th>
-                        <td>{{product.nameShow}}</td>
-                        <td>{{product.subcategory}}</td>
-                        <td>{{format_number(product.unitPrice)}}</td>
-                        <td>
-                            <span class="mr-2" style="font-size: 1em; color: Dodgerblue;" @click="editProduct(product)">
-                                <i class="fas fa-edit" />
-                            </span>
-                            <span class="mr-2" style="font-size: 1em; color: tomato;" @click="deleteProduct(product._id)">
-                                <i class="fas fa-window-close" />
-                            </span>                           
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> -->
         <ModalCreatedProduct ref="ModalCreatedProduct" @update="listarProducts" />
         <ModalDeletedProduct ref="ModalDeletedProduct" @update="listarProducts" />
     </section>
@@ -89,22 +157,94 @@ export default {
     },
     data(){
         return{
+            footerProps: {'items-per-page-options': [5, 15, 30, 50, 100, -1]},
             listProducts: [],
             search: '',
-            myHeaders: [
-                // { text: '#', align: 'start', value: 'code', itemsPerPage: 50 },
-                // { text: 'subcategory', value: 'subcategory' },
-                { text: 'Nombre', value: 'nameShow' },
-                { text: 'Precio venta', value: 'unitPrice', align:"end" },
-                { text: 'Stock', value: 'stock' },
-                { text: 'Opciones', value: 'actions',sortable: false }
-            ],
+            name: '',
+            type: '',
+            color: '',
+            size:'',
+            cant_stock:null,
+            totalStock: 0,
+            colores:['Azul', 'Lila', 'Negro'],
+            optionsTipo:['Vinilo', 'Nitrilo','Latex'],
+            optionsSize:['XL','L','M',  'S', 'XS'],
+            // expandir table
+            singleExpand: true,
+            expanded: [],
         }
     },
+    computed: {
+        my2Headers(){ 
+            return [
+                { text: 'Sub Categoria', value: 'subcategory' },
+                { 
+                    text: 'Nombre', 
+                    align: 'left', 
+                    value: 'name',
+                    filter: f => { return (f + '').toLowerCase().includes(this[ 'name' ].toLowerCase()) }},
+                { 
+                    text: 'Tipo', 
+                    value: 'type',
+                    filter: f => { 
+                        return this[ 'type' ] !==undefined ?  (f + '').toLowerCase().includes(this[ 'type' ].toLowerCase()) : true
+                    }
+                },
+                { 
+                    text: 'Color', 
+                    value: 'color',
+                    filter: f => { return this[ 'color' ] !==undefined ?  (f + '').toLowerCase().includes(this[ 'color' ].toLowerCase()) : true}
+                },
+                { 
+                    text: 'Tamaño', 
+                    value: 'size',
+                    filter: f => {
+                        // return this[ 'size' ] !==undefined ?  (f + '').toLowerCase().includes(this[ 'size' ].toLowerCase()) : true 
+                        if(this[ 'size' ] ===undefined || this[ 'size' ] === ''){
+                            return true
+                        }
+                        // console.log('1',(f + ''),'2', this[ 'size' ],  (f + '').includes(this[ 'size' ]));
+                        const temp = this[ 'size' ].length === (f + '').length
+                        return this[ 'size' ] !==undefined ?  this[ 'size' ].includes((f + '')) && temp : true 
+                    }
+                },
+                { text: 'Valor venta', value: 'unitPrice' },
+                { 
+                    text: 'Stock', 
+                    value: 'stock',
+                    filter: f => { 
+                        if(this.cant_stock===null){
+                            return true
+                        }else{
+                            return f >= this.cant_stock
+                        }
+                        // return this[ 'color' ] !==undefined ?  (f + '').toLowerCase().includes(this[ 'color' ].toLowerCase()) : true
+                    }
+                },
+                { text: 'Opciones', value: 'actions',sortable: false },
+                { text: '', value: 'data-table-expand' }
+
+            ]
+        }
+    },
+
     mounted(){
         this.listarProducts()
     },
     methods:{
+        getFiltered(filtrado){
+            let res = filtrado.reduce((acu, currentValue) =>{
+                let temp = currentValue.stock === undefined ? 0 : currentValue.stock
+                return acu + temp
+            }, 0)
+            this.totalStock = res
+        },
+        getColor(color){
+            if (color === 'Azul') return '#BBDEFB'
+            else if (color  === 'Lila') return '#E1BEE7'
+            else if (color  === 'Negro') return '#757575'
+            else return ''
+        },
         addProduc(){
             this.$refs.ModalCreatedProduct.openModal()
         },
@@ -129,5 +269,11 @@ export default {
 <style scoped>
     .m-navbar{
         margin-top: 50px;  
+    }
+    @media (max-width: 600px) {
+        .bgred {
+            /* background-color: red; */
+            display: block!important;
+        }
     }
 </style>
