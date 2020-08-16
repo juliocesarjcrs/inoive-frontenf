@@ -1,7 +1,12 @@
 import axios from 'axios'
+import Helper from '../../services/helper'
+
 // state
 const state = {
-    usuarioDB: null,
+    usuarioDB: {
+        name: '',
+        imagen: null
+    },
     token: localStorage.getItem('token')
 }
 
@@ -23,21 +28,24 @@ const mutations = {
 // actions
 const actions = {
     async login({ commit }, payload){
-        try {
-            const {data} = await axios.post('login', payload).catch(e =>Helper.HandlingErrors(e))  
-            if(data.token){
-                localStorage.setItem('token', data.token);
-                commit('SET_TOKEN', data.token)
-                commit('SET_usuarioDB', data.usuarioDB)               
-            }            
-        } catch (e){
-            Helper.error_catch(e)
-        }  
+        // try {
+        const {data} = await axios.post('login', payload).catch(e =>Helper.HandlingErrors(e))  
+        if(data.token){
+            localStorage.setItem('token', data.token);
+            commit('SET_TOKEN', data.token)
+            commit('SET_usuarioDB', data.usuarioDB)               
+        }            
+        // } catch (e){
+        //     Helper.error_catch(e)
+        // }  
     },
     cerrarSesion({commit}){
-        commit('SET_usuarioDB', null);
+        commit('SET_usuarioDB', {
+            name: '',
+            imagen: null
+        });
+        commit('SET_TOKEN', null);
         localStorage.removeItem('token');
-        router.push({name: 'login'});
     },
     leerToken({commit}){
         const token = localStorage.getItem('token');

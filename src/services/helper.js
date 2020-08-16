@@ -5,23 +5,26 @@ export default {
         // console.log('HandlingErrors', error);
         
         if (error.response){
-            console.log('(1)');
+            // console.log('(1)');
             
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
-            console.log(error.response.data);
             // console.log(error.response.status);
             // console.log(error.response.headers);
             if(error.response.status ===422){
                 this.notification(`Error ${error.response.status}`,error.response.data.errors, 'warning')
-
+                
             }
             if(error.response.status ===404){
                 this.notification(`Error ${error.response.status}`,error.response.data.message, 'warning')
             }
             if(error.response.status ===400){
                 this.notification(`Error ${error.response.status}`,error.response.data.error, 'warning')
-
+            }
+            if(error.response.status ===401){ //(Unauthorized
+                console.log(error.response.data);
+                localStorage.removeItem('token');               
+                this.notification(`Error ${error.response.status}`,error.response.data.error, 'warning')
             }
         } else if (error.request){
             console.log('(2)');

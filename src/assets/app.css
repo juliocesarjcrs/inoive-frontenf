@@ -9,3 +9,11 @@
 .f-12 {
     font-size: 12px;
 }
+.cr-pointer {
+    cursor: pointer;
+}
+.cr-not-allowed {
+    cursor: not-allowed;
+}
+
+

@@ -24,6 +24,7 @@
                 item-key="_id"
                 show-expand
                 class="elevation-1"
+                dense
                 >
                     <template v-slot:item.actions="{ item }">
                         <v-icon small class="mr-2" @click="edit(item)">

@@ -3,7 +3,7 @@
         <div class="row mb-4 container">
             <div class="col-12 col-sm-12 text-left">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary" @click="saveInvoice">
+                    <button type="button" class="btn btn-success text-white" @click="saveInvoice">
                         {{texto}}
                     </button>
                     <button type="button" class="btn btn-secondary" :disabled="texto=='Guardar'" data-toggle="tooltip" data-placement="top" :title="texto=='Guardar'?'guarde primero la factura':'Previsualizar Pdf'" @click="openModalPreviewPdf">
@@ -197,6 +197,7 @@
 <script>
 import moment from 'moment'
 import {mapGetters} from 'vuex'
+import { log } from 'util'
 export default {
     components:{
         ModalPreviewInvoice : () => import('./ModalPreviewInvoice')
@@ -239,7 +240,8 @@ export default {
     },
     computed:{
         ...mapGetters({
-            user: 'user/user'
+            user: 'user/user',
+            usuarioDB: 'auth/usuarioDB'
         }),
         texto(){
             if(this.id_factura=== undefined || this.id_factura ===null){
@@ -407,6 +409,7 @@ export default {
 
         },
         async listUser(){
+            console.log('listUser-usuarioDB', this.usuarioDB);
             this.$store.dispatch('user/getLoggedUser')
         },
         clearForm(){
