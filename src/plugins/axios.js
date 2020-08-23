@@ -6,8 +6,9 @@ import router from '../plugins/router'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 // Agregamos la URL base de nuestra API
-// axios.defaults.baseURL = 'http://localhost:3000/api';   // LOCAL
-axios.defaults.baseURL = 'https://invoice-generetor-2.herokuapp.com/api';
+const RUTA_SERVIDOR = process.env.VUE_APP_RUTA_API;
+axios.defaults.baseURL = RUTA_SERVIDOR;   
+
 Vue.prototype.$axios = axios
 
 // Request interceptor

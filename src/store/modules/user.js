@@ -27,10 +27,14 @@ const mutations = {
 const actions = {
     async getLoggedUser({ commit }){
         // const {data} = await axios.get('user/5f0e3eadd5dcc6207c3fd5d8') // local
-        const {data} = await axios.get('user/5f0948da92d5b73308946151') // produccion
+        // const {data} = await axios.get(`user/5f0948da92d5b73308946151`) // produccion
+        const ID_USER = process.env.VUE_APP_ID_USER;
+        console.log('ID_USER', ID_USER);
+        const {data} = await axios.get(`user/${ID_USER}`) // produccion
         
         commit('SET_USER', data.body)
     }
+    
 }
 export default {
     namespaced: true,
